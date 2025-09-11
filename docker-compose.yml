@@ -1,0 +1,14 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: HotelBackend.WebApi/Dockerfile 
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=host.docker.internal;Port=5432;Database=HotelBackendDB;Username=postgres;Password=superuser123;
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

@@ -1,0 +1,61 @@
+﻿using HotelBackend.Application.Interfaces.InterfacesDbContexts;
+using HotelBackend.Domain.Interfaces.InterfacesRepositories;
+using HotelBackend.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace HotelBackend.Application.Repositories
+{
+    public class RoomRepository : IRoomRepository
+    {
+        private readonly IHotelBackendDbContext _context;
+
+        public RoomRepository(
+            IHotelBackendDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<Guid> CreateAsync(
+            Room room,
+            CancellationToken cancellationToken)
+        {
+            await _context.Rooms.AddAsync(room, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return room.Id;
+        }
+
+        public async Task DeleteAsync(
+            Room room,
+            CancellationToken cancellationToken)
+        {
+            _context.Rooms.Remove(room);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<IList<Room>> GetAllAsync(
+            CancellationToken cancellationToken)
+        {
+            return await _context.Rooms
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<Room?> GetByIdAsync(
+            Guid id,
+            CancellationToken cancellationToken)
+        {
+            return await _context.Rooms
+                .AsNoTracking()
+                .FirstOrDefaultAsync(room => room.Id == id, cancellationToken);
+        }
+
+        public async Task UpdateAsync(
+            Room room,
+            CancellationToken cancellationToken)
+        {
+            _context.Rooms.Update(room);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+    }
+}
