@@ -15,7 +15,7 @@ namespace HotelBackend.Persistence.Data.DbContexts
             _options = options;
         }
 
-        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Booking> Reservations { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserType> UserTypes { get; set; }

@@ -23,6 +23,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решен
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{BFE9D2A8-1D48-4A25-A7BB-BB26938C7260}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBackend.Shared", "HotelBackend.Shared\HotelBackend.Shared.csproj", "{BC2B2BB6-F75F-4866-91E5-E215302FD31C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,10 @@ Global
 		{DC6C3857-97A6-4625-A047-E2845AD7CA33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC6C3857-97A6-4625-A047-E2845AD7CA33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC6C3857-97A6-4625-A047-E2845AD7CA33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC2B2BB6-F75F-4866-91E5-E215302FD31C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC2B2BB6-F75F-4866-91E5-E215302FD31C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC2B2BB6-F75F-4866-91E5-E215302FD31C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC2B2BB6-F75F-4866-91E5-E215302FD31C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +62,7 @@ Global
 		{5168AED2-308C-460E-A11B-DA9A327F85DA} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{D50087F9-8F40-4AFA-8A68-17AD7B831EB2} = {C9080AB7-9482-47E6-B709-7879BCCE8C7D}
 		{DC6C3857-97A6-4625-A047-E2845AD7CA33} = {A0B51B4E-6613-4891-B8AA-484C4320A7B8}
+		{BC2B2BB6-F75F-4866-91E5-E215302FD31C} = {BFE9D2A8-1D48-4A25-A7BB-BB26938C7260}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9D9DF983-EE15-4E13-BF60-3830C049BBD1}

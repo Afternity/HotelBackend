@@ -9,12 +9,12 @@ namespace HotelBackend.Application.Common.Mappings
     {
         public ReservationMappingProfile()
         {
-            CreateMap<CreateReservationDto, Reservation>();
-            CreateMap<UpdateReservationDto, Reservation>()
+            CreateMap<CreateReservationDto, Booking>();
+            CreateMap<UpdateReservationDto, Booking>()
                 .ForMember(destination => destination.Id,
                     options => options.Ignore());
-            CreateMap<Reservation, ReservationVm>();
-            CreateMap<Reservation, ReservationLookupDto>();
+            CreateMap<Booking, ReservationVm>();
+            CreateMap<Booking, ReservationLookupDto>();
         }
     }
 }

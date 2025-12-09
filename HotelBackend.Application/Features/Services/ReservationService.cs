@@ -112,7 +112,7 @@ namespace HotelBackend.Application.Features.Services
             if (user == null)
                 throw new NotFoundException(nameof(user), createDto.UserId);
 
-            var createReservation = _mapper.Map<Reservation>(createDto);
+            var createReservation = _mapper.Map<Booking>(createDto);
 
             createReservation.GuestName = user.Name;
             createReservation.GuestEmail = user.Email;

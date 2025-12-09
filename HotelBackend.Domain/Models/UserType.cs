@@ -2,9 +2,11 @@
 
 namespace HotelBackend.Domain.Models
 {
-    public class UserType : BaseModel
+    public class UserType 
+        : BaseModel
     {
         public string Type { get; set; } = null!;
-        public IList<User> Users { get; set; } = [];
+
+        public virtual IList<User> Users { get; set; } = [];
     }
 }

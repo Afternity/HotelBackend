@@ -4,21 +4,21 @@ namespace HotelBackend.Domain.Interfaces.InterfacesRepositories
 {
     public interface IReservationRepository
     {
-        Task<Reservation?> GetByIdAsync(
+        Task<Booking?> GetByIdAsync(
             Guid Id,
             CancellationToken cancellationToken);
-        Task<IList<Reservation>> GetMyAllAsync(
+        Task<IList<Booking>> GetMyAllAsync(
             Guid userId,
             CancellationToken cancellationToken);
-        Task<IList<Reservation>> GetAllAsync(
+        Task<IList<Booking>> GetAllAsync(
             CancellationToken cancellationToken);
-        Task<IList<Reservation>> CheckDatesAsync(
+        Task<IList<Booking>> CheckDatesAsync(
             Guid roomId,
             Guid reservationId,
             DateTime checkInDate,
             DateTime checkOutDate,
             CancellationToken cancellationToken);
-        Task<IList<Reservation>> CheckDatesAsync(
+        Task<IList<Booking>> CheckDatesAsync(
             Guid roomId,
             DateTime checkInDate,
             DateTime checkOutDate,
@@ -26,13 +26,13 @@ namespace HotelBackend.Domain.Interfaces.InterfacesRepositories
         Task<User?> GetGuestsById(
             Guid userId);
         Task<Guid> CreateAsync(
-            Reservation reservation,
+            Booking reservation,
             CancellationToken cancellationToken);
         Task UpdateAsync(
-            Reservation reservation,
+            Booking reservation,
             CancellationToken cancellationToken);
         Task DeleteAsync(
-            Reservation reservation,
+            Booking reservation,
             CancellationToken cancellationToken);
     }
 }

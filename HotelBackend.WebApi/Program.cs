@@ -1,5 +1,5 @@
 using HotelBackend.Application.DependencyInjections;
-using HotelBackend.Persistence.Data.DependencyInjections;
+using HotelBackend.Persistence.DependencyInjections;
 
 var builder = WebApplication.CreateBuilder(args);
 

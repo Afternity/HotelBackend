@@ -1,5 +1,4 @@
-﻿
-using HotelBackend.Application.Common.Contracts.DTOs.UserDTOs;
+﻿using HotelBackend.Application.Common.Contracts.DTOs.UserDTOs;
 using HotelBackend.Application.Common.Contracts.ViewModels.UserViewModes;
 using HotelBackend.Domain.Models;
 using AutoMapper;

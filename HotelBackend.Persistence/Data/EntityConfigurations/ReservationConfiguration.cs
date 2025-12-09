@@ -4,9 +4,9 @@ using HotelBackend.Domain.Models;
 
 namespace HotelBackend.Persistence.Data.EntityConfigurations
 {
-    class ReservationConfiguration : IEntityTypeConfiguration<Reservation>
+    class ReservationConfiguration : IEntityTypeConfiguration<Booking>
     {
-        public void Configure(EntityTypeBuilder<Reservation> builder)
+        public void Configure(EntityTypeBuilder<Booking> builder)
         {
             builder.HasKey(reservation => reservation.Id);
 
