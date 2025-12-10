@@ -1,5 +1,8 @@
 ﻿namespace HotelBackend.Domain.BaseModels
 {
+    /// <summary>
+    /// Все модели БД наследуют от BaseModel
+    /// </summary>
     public class BaseModel
     {
         public Guid Id { get; set; }

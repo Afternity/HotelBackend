@@ -41,7 +41,7 @@ namespace HotelBackend.Persistence.DependencyInjections
             });
 
             services.AddScoped<IRoomRepository, RoomRepository>();
-            services.AddScoped<IReservationRepository, ReservationRepository>();
+            services.AddScoped<IBookingRepository, ReservationRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserTypeRepository, UserTypeRepository>();
 

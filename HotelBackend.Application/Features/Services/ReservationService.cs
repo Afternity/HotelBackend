@@ -12,7 +12,7 @@ namespace HotelBackend.Application.Features.Services
 {
     public class ReservationService : IReservationService
     {
-        private readonly IReservationRepository _reservationRepository;
+        private readonly IBookingRepository _reservationRepository;
         private readonly ILogger<ReservationService> _logger;
 
         private readonly IMapper _mapper;
@@ -21,7 +21,7 @@ namespace HotelBackend.Application.Features.Services
         private readonly IValidator<FindAndDeleteReservationDto> _findAndDeleteReservationDtoValidato;
 
         public ReservationService(
-            IReservationRepository reservationRepository,
+            IBookingRepository reservationRepository,
             ILogger<ReservationService> logger,
             IMapper mapper,
             IValidator<CreateReservationDto> createReservationDtoValidato,

@@ -1,4 +1,5 @@
-﻿using HotelBackend.Shared.Contracts.DTOs.UserDTOs;
+﻿using HotelBackend.Shared.Contracts.DTOs.UserDTOs.CreateUserDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.UpdateUserDTOs;
 using HotelBackend.Shared.Contracts.ViewModels.UserViewModes;
 
 namespace HotelBackend.Domain.Interfaces.InterfacesServices

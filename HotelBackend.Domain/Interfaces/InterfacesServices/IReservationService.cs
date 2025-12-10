@@ -1,4 +1,4 @@
-﻿using HotelBackend.Shared.Contracts.DTOs.ReservationDTOs;
+﻿using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.UpdateBookingDTOs;
 using HotelBackend.Shared.Contracts.ViewModels.ReservationViewModes;
 
 namespace HotelBackend.Domain.Interfaces.InterfacesServices
@@ -21,17 +21,6 @@ namespace HotelBackend.Domain.Interfaces.InterfacesServices
             CancellationToken cancellationToken);
         Task DeleteAsync(
             FindAndDeleteReservationDto deleteDto,
-            CancellationToken cancellationToken);
-        Task<bool> CheckDatesAsync(
-            Guid reservationId,
-            Guid roomId,
-            DateTime checkInDate,
-            DateTime CheckOutDate,
-            CancellationToken cancellationToken);
-        Task<bool> CheckDatesAsync(
-            Guid roomId,
-            DateTime checkInDate,
-            DateTime CheckOutDate,
             CancellationToken cancellationToken);
     }
 }

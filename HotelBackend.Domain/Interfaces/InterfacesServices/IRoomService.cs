@@ -1,11 +1,13 @@
-﻿using HotelBackend.Shared.Contracts.DTOs.RoomDTOs;
-using HotelBackend.Shared.Contracts.ViewModels.RoomViewModels;
+﻿using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.CreateRoomDTOs;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.UpdateRoomDTOs;
+using HotelBackend.Shared.Contracts.VMs.RoomVMs.RoomDetailsVMs;
+using HotelBackend.Shared.Contracts.VMs.RoomVMs.RoomListVMs;
 
 namespace HotelBackend.Domain.Interfaces.InterfacesServices
 {
     public interface IRoomService
     {
-        Task<RoomVm> GetByIdAsync(
+        Task<RoomDetailsVm> GetByIdAsync(
             FindAndDeleteRoomDto findDto,
             CancellationToken cancellationToken);
         Task<RoomListVm> GetAllAsync(

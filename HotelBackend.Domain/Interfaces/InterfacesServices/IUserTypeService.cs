@@ -1,11 +1,13 @@
-﻿using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs;
-using HotelBackend.Shared.Contracts.ViewModels.UserTypeViewModels;
+﻿using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.CreateUserTypeDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.UpdareUserTypeDTOs;
+using HotelBackend.Shared.Contracts.VMs.UserTypeViewModels.UserTypeDatailsVMs;
+using HotelBackend.Shared.Contracts.VMs.UserTypeViewModels.UserTypeListVMs;
 
 namespace HotelBackend.Domain.Interfaces.InterfacesServices
 {
     public interface IUserTypeService
     {
-        Task<UserTypeVm> GetByIdAsync(
+        Task<UserTypeDetailsVm> GetByIdAsync(
             FindAndDeleteUserTypeDto findDto,
             CancellationToken cancellationToken);
         Task<Guid> CreateAsync(
