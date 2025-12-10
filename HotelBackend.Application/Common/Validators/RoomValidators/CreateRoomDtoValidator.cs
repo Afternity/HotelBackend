@@ -1,5 +1,5 @@
-﻿using HotelBackend.Application.Common.Contracts.DTOs.RoomDTOs;
-using FluentValidation;
+﻿using FluentValidation;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.CreateRoomDTOs;
 
 namespace HotelBackend.Application.Common.Validators.RoomValidators
 {
@@ -11,9 +11,7 @@ namespace HotelBackend.Application.Common.Validators.RoomValidators
             RuleFor(command => command.Number)
                .MaximumLength(50)
                .NotEmpty();
-            RuleFor(command => command.Class)
-                .MaximumLength(50)
-                .NotEmpty();
+            
             RuleFor(command => command.Description)
                 .MaximumLength(200);
             RuleFor(command => command.PricePerNight)

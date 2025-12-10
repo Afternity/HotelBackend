@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelBackend.Persistence.Repositories
 {
-    public class UserTypeRepository : IUserTypeRepository
+    public class UserTypeRepository 
     {
         private readonly HotelBackendDbContext _context;
 

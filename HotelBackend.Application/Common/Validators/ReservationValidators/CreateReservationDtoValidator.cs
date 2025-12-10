@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using HotelBackend.Application.Common.Contracts.DTOs.ReservationDTOs;
+using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.CreateBookingDTOs;
 
 namespace HotelBackend.Application.Common.Validators.ReservationValidators
 {
     public class CreateReservationDtoValidator
-        : AbstractValidator<CreateReservationDto>
+        : AbstractValidator<CreateBookingDto>
     {
         public CreateReservationDtoValidator()
         {

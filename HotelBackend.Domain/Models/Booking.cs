@@ -12,7 +12,6 @@ namespace HotelBackend.Domain.Models
         public virtual Room Room { get; set; } = null!;
         public Guid UserId { get; set; }
         public virtual User User { get; set; } = null!;
-        public Guid PaymentId { get; set; }
         public virtual Payment Payment { get; set; } = null!;
 
         public virtual ICollection<Review> Reviews { get; set; } = [];

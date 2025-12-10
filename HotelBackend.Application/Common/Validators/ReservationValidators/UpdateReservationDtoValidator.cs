@@ -1,10 +1,10 @@
-﻿using HotelBackend.Application.Common.Contracts.DTOs.ReservationDTOs;
-using FluentValidation;
+﻿using FluentValidation;
+using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.UpdateBookingDTOs;
 
 namespace HotelBackend.Application.Common.Validators.ReservationValidators
 {
     public class UpdateReservationDtoValidator
-        : AbstractValidator<UpdateReservationDto>
+        : AbstractValidator<UpdateBookingDto>
     {
         public UpdateReservationDtoValidator()
         {
@@ -20,13 +20,7 @@ namespace HotelBackend.Application.Common.Validators.ReservationValidators
                 .WithMessage("get this => ChecOutnDate > Today")
                 .GreaterThan(command => command.CheckInDate)
                 .WithMessage("get this => CheckOutDate > CheckInDate");
-            RuleFor(command => command.GuestName)
-                .NotEmpty()
-                .MaximumLength(50);
-            RuleFor(command => command.GuestEmail)
-                .NotEmpty()
-                .EmailAddress()
-                .MaximumLength(50);
+           
             RuleFor(command => command.RoomId)
                 .NotEqual(Guid.NewGuid());
         }

@@ -1,5 +1,4 @@
-﻿using HotelBackend.Application.Interfaces.InterfacesDbContexts;
-using HotelBackend.Application.Repositories;
+﻿
 using HotelBackend.Domain.Interfaces.InterfacesRepositories;
 using HotelBackend.Persistence.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ namespace HotelBackend.Persistence.DependencyInjections
             if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException("Connection string 'DefaultConnection' not found");
 
-            services.AddDbContext<IHotelBackendDbContext, HotelBackendDbContext>(options =>
+            services.AddDbContext<HotelBackendDbContext>(options =>
             {
                 options.UseNpgsql(connectionString, npgsqlOptions =>
                 {
@@ -40,10 +39,7 @@ namespace HotelBackend.Persistence.DependencyInjections
 
             });
 
-            services.AddScoped<IRoomRepository, RoomRepository>();
-            services.AddScoped<IBookingRepository, ReservationRepository>();
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserTypeRepository, UserTypeRepository>();
+           
 
             return services;
         }

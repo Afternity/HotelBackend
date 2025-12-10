@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using HotelBackend.Application.Common.Contracts.DTOs.ReservationDTOs;
+using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.GetBookingDTOs;
 
 namespace HotelBackend.Application.Common.Validators.ReservationValidators
 {
     public class DeleteReservationDtoValidator
-        : AbstractValidator<FindAndDeleteReservationDto>
+        : AbstractValidator<GetBookingDto>
     {
         public DeleteReservationDtoValidator()
         {

@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
-using HotelBackend.Application.Common.Contracts.DTOs.RoomDTOs;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.GetRoomDTOs;
 
 namespace HotelBackend.Application.Common.Validators.RoomValidators
 {
     public class FindAndDeleteRoomDtoValidator 
-        : AbstractValidator<FindAndDeleteRoomDto>
+        : AbstractValidator<GetRoomDto>
     {
         public FindAndDeleteRoomDtoValidator()
         {

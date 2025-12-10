@@ -1,4 +1,4 @@
-﻿using HotelBackend.Shared.Contracts.Enums.Payment;
+﻿using HotelBackend.Shared.Contracts.Enums.PaymentEnums;
 
 namespace HotelBackend.Shared.Contracts.DTOs.PaymentDTOs.UpdatePaymentDTOs
 {

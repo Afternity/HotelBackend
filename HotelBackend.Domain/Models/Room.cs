@@ -1,5 +1,5 @@
 ﻿using HotelBackend.Domain.BaseModels;
-using HotelBackend.Domain.Emums.RoomEnums;
+using HotelBackend.Domain.Enums.RoomEnums;
 
 namespace HotelBackend.Domain.Models
 {
@@ -11,7 +11,7 @@ namespace HotelBackend.Domain.Models
         public string Description { get; set; } = string.Empty;
         public decimal PricePerNight { get; set; } = decimal.Zero;
 
-        public virtual ICollection<Booking> Reservations { get; set; } = [];
+        public virtual ICollection<Booking> Bookings { get; set; } = [];
         public virtual ICollection<Review> Reviews { get; set; } = [];
     }
 }

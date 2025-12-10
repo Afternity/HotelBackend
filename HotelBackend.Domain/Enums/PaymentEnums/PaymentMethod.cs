@@ -1,4 +1,4 @@
-﻿namespace HotelBackend.Domain.Emums.PaymentEnums
+﻿namespace HotelBackend.Domain.Enums.PaymentEnums
 {
     public enum PaymentMethod
     {

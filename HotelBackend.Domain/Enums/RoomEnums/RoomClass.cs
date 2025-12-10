@@ -1,4 +1,4 @@
-﻿namespace HotelBackend.Domain.Emums.RoomEnums
+﻿namespace HotelBackend.Domain.Enums.RoomEnums
 {
     public enum RoomClass
     {

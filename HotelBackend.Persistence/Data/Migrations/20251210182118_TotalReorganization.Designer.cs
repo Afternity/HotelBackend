@@ -3,6 +3,7 @@ using System;
 using HotelBackend.Persistence.Data.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HotelBackend.Persistence.Data.Migrations
 {
     [DbContext(typeof(HotelBackendDbContext))]
-    partial class HotelBackendDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251210182118_TotalReorganization")]
+    partial class TotalReorganization
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

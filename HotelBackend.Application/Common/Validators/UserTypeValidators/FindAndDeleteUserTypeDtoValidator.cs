@@ -1,10 +1,10 @@
-﻿using HotelBackend.Application.Common.Contracts.DTOs.UserTypeDTOs;
-using FluentValidation;
+﻿using FluentValidation;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.GetUserTypeDTOs;
 
 namespace HotelBackend.Application.Common.Validators.UserTypeValidators
 {
     public class FindAndDeleteUserTypeDtoValidator 
-        : AbstractValidator<FindAndDeleteUserTypeDto>
+        : AbstractValidator<GetUserTypeDto>
     {
         public FindAndDeleteUserTypeDtoValidator()
         {

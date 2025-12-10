@@ -11,7 +11,7 @@ namespace HotelBackend.Domain.Models
 
         public Guid UserTypeId { get; set; }
         public virtual UserType UserType { get; set; } = null!;
-        public virtual ICollection<Booking> Reservations { get; set; } = [];
+        public virtual ICollection<Booking> Bookings { get; set; } = [];
         public virtual ICollection<Review> Reviews { get; set; } = [];
     }
 }

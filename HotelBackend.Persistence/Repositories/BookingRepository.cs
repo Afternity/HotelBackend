@@ -5,52 +5,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelBackend.Persistence.Repositories
 {
-    public class ReservationRepository : IBookingRepository
+    public class BookingRepository : IBookingRepository
     {
         private readonly HotelBackendDbContext _context;
 
-        public ReservationRepository(HotelBackendDbContext context)
+        public BookingRepository(HotelBackendDbContext context)
         {
             _context = context;
-        }
-
-        public async Task<IList<Booking>> CheckDatesAsync(
-            Guid reservationId,
-            Guid roomId,
-            DateTime checkInDate,
-            DateTime checkOutDate,
-            CancellationToken cancellationToken)
-        {
-            return await _context.Reservations
-                .AsNoTracking()
-                .Where(reservation => 
-                    reservation.Id != reservationId &&
-                    reservation.RoomId == roomId &&
-                    reservation.CheckInDate <= checkOutDate &&
-                    reservation.CheckOutDate >= checkInDate)
-                .ToListAsync(cancellationToken); 
-        }
-
-        public async Task<IList<Booking>> CheckDatesAsync(
-            Guid roomId,
-            DateTime checkInDate,
-            DateTime checkOutDate,
-            CancellationToken cancellationToken)
-        {
-            return await _context.Reservations
-               .AsNoTracking()
-                .Where(reservation =>
-                    reservation.RoomId == roomId &&
-                    reservation.CheckInDate <= checkOutDate &&
-                    reservation.CheckOutDate >= checkInDate)
-                .ToListAsync(cancellationToken);
         }
 
         public async Task<User?> GetGuestsById(
             Guid userId)
         {
             return await _context.Users
-                .AsNoTracking()
                 .FirstOrDefaultAsync(user =>
                     user.Id == userId);
         }
@@ -59,7 +26,7 @@ namespace HotelBackend.Persistence.Repositories
             Booking reservation,
             CancellationToken cancellationToken)
         {
-            await _context.Reservations.AddAsync(reservation);
+            await _context.Bookings.AddAsync(reservation);
             await _context.SaveChangesAsync(cancellationToken);
 
             return reservation.Id;
@@ -69,14 +36,14 @@ namespace HotelBackend.Persistence.Repositories
             Booking reservation,
             CancellationToken cancellationToken)
         {
-            _context.Reservations.Remove(reservation);
+            _context.Bookings.Remove(reservation);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<IList<Booking>> GetAllAsync(
             CancellationToken cancellationToken)
         {
-            return await _context.Reservations
+            return await _context.Bookings
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
         }
@@ -84,7 +51,7 @@ namespace HotelBackend.Persistence.Repositories
         public async Task<Booking?> GetByIdAsync(Guid id,
             CancellationToken cancellationToken)
         {
-            return await _context.Reservations
+            return await _context.Bookings
                 .AsNoTracking()
                 .FirstOrDefaultAsync(reservation =>
                     reservation.Id == id);
@@ -94,7 +61,7 @@ namespace HotelBackend.Persistence.Repositories
             Guid userId,
             CancellationToken cancellationToken)
         {
-            return await _context.Reservations
+            return await _context.Bookings
                 .AsNoTracking()
                 .Where(reservations =>
                     reservations.UserId == userId)
@@ -105,8 +72,28 @@ namespace HotelBackend.Persistence.Repositories
             Booking reservation,
             CancellationToken cancellationToken)
         {
-            _context.Reservations.Update(reservation);
+            _context.Bookings.Update(reservation);
             await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public Task SoftDeleteAsync(Booking booking, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task HardDeleteAsync(Booking booking, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IList<Booking>> GetAllByUserAsync(User user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Booking?> GetLastBookingByUser(User user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

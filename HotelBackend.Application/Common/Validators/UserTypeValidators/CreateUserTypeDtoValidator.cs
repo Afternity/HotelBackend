@@ -1,5 +1,5 @@
-﻿using HotelBackend.Application.Common.Contracts.DTOs.UserTypeDTOs;
-using FluentValidation;
+﻿using FluentValidation;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.CreateUserTypeDTOs;
 
 namespace HotelBackend.Application.Common.Validators.UserTypeValidators
 {

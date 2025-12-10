@@ -1,5 +1,5 @@
-﻿using HotelBackend.Application.Common.Contracts.DTOs.UserDTOs;
-using FluentValidation;
+﻿using FluentValidation;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.UpdateUserDTOs;
 
 namespace HotelBackend.Application.Common.Validators.UserValidators
 {
@@ -19,8 +19,6 @@ namespace HotelBackend.Application.Common.Validators.UserValidators
             RuleFor(command => command.Password)
                .MaximumLength(50)
                .NotEmpty();
-            RuleFor(command => command.UserTypeId)
-                .NotEqual(Guid.NewGuid());
         }
     }
 }
