@@ -1,6 +1,6 @@
 ﻿namespace HotelBackend.Shared.Contracts.DTOs.BookingDTOs.UpdateBookingDTOs
 {
-    public record UpdateReservationDto
+    public record UpdateBookingDto
     {
         public Guid Id {  get; set; }
         public DateTime CheckInDate { get; set; } 
