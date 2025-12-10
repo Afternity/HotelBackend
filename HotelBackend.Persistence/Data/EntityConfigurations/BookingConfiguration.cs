@@ -22,12 +22,12 @@ namespace HotelBackend.Persistence.Data.EntityConfigurations
                 .HasColumnType("timestamp with time zone");
 
             // метаданные
-            builder.Property(booking => booking.CreateAt)
+            builder.Property(booking => booking.CreatedAt)
                .IsRequired(true)
                .HasColumnType("timestamp with time zone")
                .HasDefaultValueSql("now()");
 
-            builder.Property(booking => booking.UpdateAt)
+            builder.Property(booking => booking.UpdatedAt)
                 .IsRequired(false)
                 .HasColumnType("timestamp with time zone");
 

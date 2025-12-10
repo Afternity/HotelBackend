@@ -37,12 +37,12 @@ namespace HotelBackend.Persistence.Data.EntityConfigurations
                 .HasDefaultValue(PaymentStatus.Paid);
 
             // метаданные
-            builder.Property(payment => payment.CreateAt)
+            builder.Property(payment => payment.CreatedAt)
                .IsRequired(true)
                .HasColumnType("timestamp with time zone")
                .HasDefaultValueSql("now()");
 
-            builder.Property(payment => payment.UpdateAt)
+            builder.Property(payment => payment.UpdatedAt)
                 .IsRequired(false)
                 .HasColumnType("timestamp with time zone");
 

@@ -36,12 +36,12 @@ namespace HotelBackend.Persistence.Data.EntityConfigurations
                 .HasMaxLength(256);
 
             // метаданные
-            builder.Property(user => user.CreateAt)
+            builder.Property(user => user.CreatedAt)
               .IsRequired(true)
               .HasColumnType("timestamp with time zone")
               .HasDefaultValueSql("now()");
 
-            builder.Property(user => user.UpdateAt)
+            builder.Property(user => user.UpdatedAt)
                 .IsRequired(false)
                 .HasColumnType("timestamp with time zone");
 

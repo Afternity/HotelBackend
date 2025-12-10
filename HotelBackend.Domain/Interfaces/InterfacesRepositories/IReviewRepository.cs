@@ -19,6 +19,13 @@ namespace HotelBackend.Domain.Interfaces.InterfacesRepositories
             CancellationToken cancellationToken);
 
         /// <summary>
+        /// Для админа.
+        /// </summary>
+        Task UpdateAsync(
+            Review review,
+            CancellationToken cancellationToken);
+
+        /// <summary>
         /// Для админа
         /// </summary>
         Task SoftDeleteAsync(

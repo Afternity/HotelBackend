@@ -5,86 +5,86 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelBackend.Persistence.Repositories
 {
-    public class RoomRepository 
-        : IRoomRepository
+    public class ReviewRepository
+        : IReviewRepository
     {
         private readonly HotelBackendDbContext _context;
 
-        public RoomRepository(
+        public ReviewRepository(
             HotelBackendDbContext context)
         {
             _context = context;
         }
 
         public async Task<Guid> CreateAsync(
-            Room room,
+            Review review,
             CancellationToken cancellationToken)
         {
-            await _context.Rooms
-                .AddAsync(room, cancellationToken);
+            await _context.Reviews
+                .AddAsync(review, cancellationToken);
             await _context
                 .SaveChangesAsync(cancellationToken);
 
-            return room.Id;
+            return review.Id;
         }
 
-        public async Task<IList<Room>> GetAllAsync(
-            CancellationToken cancellation)
-        {
-            return await _context.Rooms
-                .Where(room => 
-                    room.IsDeleted == false)
-                .ToListAsync(cancellation);
-        }
-
-        public async Task<IList<Room>> GetAllByRatingAsync(
-            int rating,
+        public async Task<IList<Review>> GetAllAsync(
             CancellationToken cancellationToken)
         {
-            return await _context.Rooms
-                .Where(room =>
-                    room.Reviews
-                        .Any(review =>
-                            review.Rating == rating))
+            return await _context.Reviews
+                .Where(review => 
+                    review.IsDeleted == false)
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Room?> GetByIdAsync(
+        public async Task<IList<Review>> GetAllByRatingAndRoomAsync(
+            int rating, Room room,
+            CancellationToken cancellationToken)
+        {
+            return await _context.Reviews
+                .Where(review =>
+                    review.Booking.RoomId == room.Id &&
+                    review.Rating == rating &&
+                    review.IsDeleted == false)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<Review?> GetByIdAsync(
             Guid id,
             CancellationToken cancellationToken)
         {
-            return await _context.Rooms
-                .FirstOrDefaultAsync(room =>
-                    room.Id == id,
+            return await _context.Reviews
+                .FirstOrDefaultAsync(review =>
+                    review.Id == id,
                     cancellationToken);
         }
 
         public async Task HardDeleteAsync(
-            Room room,
+            Review review,
             CancellationToken cancellationToken)
         {
-            _context.Rooms
-                .Remove(room);
+            _context.Reviews
+                .Remove(review);
             await _context
                 .SaveChangesAsync(cancellationToken);
         }
 
         public async Task SoftDeleteAsync(
-            Room room,
+            Review review,
             CancellationToken cancellationToken)
         {
-            _context.Rooms
-                .Update(room);
+            _context.Reviews
+                .Update(review);
             await _context
-                .SaveChangesAsync(cancellationToken);
+                .SaveChangesAsync (cancellationToken);
         }
 
         public async Task UpdateAsync(
-            Room room,
+            Review review,
             CancellationToken cancellationToken)
         {
-            _context.Rooms
-                .Update(room);
+            _context
+                .Update(review);
             await _context
                 .SaveChangesAsync(cancellationToken);
         }

@@ -5,95 +5,98 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelBackend.Persistence.Repositories
 {
-    public class BookingRepository : IBookingRepository
+    public class BookingRepository 
+        : IBookingRepository
     {
         private readonly HotelBackendDbContext _context;
 
-        public BookingRepository(HotelBackendDbContext context)
+        public BookingRepository(
+            HotelBackendDbContext context)
         {
             _context = context;
         }
 
-        public async Task<User?> GetGuestsById(
-            Guid userId)
-        {
-            return await _context.Users
-                .FirstOrDefaultAsync(user =>
-                    user.Id == userId);
-        }
-
         public async Task<Guid> CreateAsync(
-            Booking reservation,
+            Booking booking,
             CancellationToken cancellationToken)
         {
-            await _context.Bookings.AddAsync(reservation);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.Bookings
+                .AddAsync(booking, cancellationToken);
+            await _context
+                .SaveChangesAsync(cancellationToken);
 
-            return reservation.Id;
-        }
-
-        public async Task DeleteAsync(
-            Booking reservation,
-            CancellationToken cancellationToken)
-        {
-            _context.Bookings.Remove(reservation);
-            await _context.SaveChangesAsync(cancellationToken);
+            return booking.Id;
         }
 
         public async Task<IList<Booking>> GetAllAsync(
             CancellationToken cancellationToken)
         {
             return await _context.Bookings
-                .AsNoTracking()
+                .Where(booking => booking.IsDeleted == false)
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Booking?> GetByIdAsync(Guid id,
+        public async Task<IList<Booking>> GetAllByUserAsync(
+            User user,
             CancellationToken cancellationToken)
         {
             return await _context.Bookings
-                .AsNoTracking()
-                .FirstOrDefaultAsync(reservation =>
-                    reservation.Id == id);
+                .Where(booking =>
+                    booking.UserId == user.Id &&
+                    booking.IsDeleted == false)
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task<IList<Booking>> GetMyAllAsync(
-            Guid userId,
+        public async Task<Booking?> GetByIdAsync(
+            Guid id,
             CancellationToken cancellationToken)
         {
             return await _context.Bookings
-                .AsNoTracking()
-                .Where(reservations =>
-                    reservations.UserId == userId)
-                .ToListAsync(cancellationToken);
+                .FirstOrDefaultAsync(booking =>
+                    booking.Id == id,
+                    cancellationToken);
+        }
+
+        public async Task<Booking?> GetLastBookingByUser(
+            User user,
+            CancellationToken cancellationToken)
+        {
+            return await _context.Bookings
+                .Where(booking => 
+                    booking.UserId == user.Id &&
+                    booking.IsDeleted == false)
+                .OrderByDescending(booking => booking.CreatedAt)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task HardDeleteAsync(
+            Booking booking, 
+            CancellationToken cancellationToken)
+        {
+            _context.Bookings
+                .Remove(booking);
+            await _context
+                .SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task SoftDeleteAsync(
+            Booking booking,
+            CancellationToken cancellationToken)
+        {
+            _context.Bookings
+                .Update(booking);
+            await _context
+                .SaveChangesAsync(cancellationToken);
         }
 
         public async Task UpdateAsync(
-            Booking reservation,
+            Booking booking,
             CancellationToken cancellationToken)
         {
-            _context.Bookings.Update(reservation);
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-
-        public Task SoftDeleteAsync(Booking booking, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task HardDeleteAsync(Booking booking, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IList<Booking>> GetAllByUserAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Booking?> GetLastBookingByUser(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
+            _context.Bookings
+                .Update(booking);
+            await _context
+                .SaveChangesAsync(cancellationToken);
         }
     }
 }
