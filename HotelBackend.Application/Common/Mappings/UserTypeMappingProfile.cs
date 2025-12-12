@@ -1,6 +1,9 @@
-﻿
+﻿using AutoMapper;
 using HotelBackend.Domain.Models;
-using AutoMapper;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.CreateUserTypeDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.UpdateUserTypeDTOs;
+using HotelBackend.Shared.Contracts.VMs.UserTypeViewModels.UserTypeDatailsVMs;
+using HotelBackend.Shared.Contracts.VMs.UserTypeVMs.UserTypeLookupDTOs;
 
 namespace HotelBackend.Application.Common.Mappings
 {
@@ -8,12 +11,17 @@ namespace HotelBackend.Application.Common.Mappings
     {
         public UserTypeMappingProfile()
         {
-            //CreateMap<CreateUserTypeDto, UserType>();
-            //CreateMap<UpdateUserTypeDto, UserType>()
-            //     .ForMember(destination => destination.Id,
-            //        options => options.Ignore());
-            //CreateMap<UserType, UserTypeVm>();
-            //CreateMap<UserType, UserTypeLookupDto>();
+            // createDto
+            CreateMap<CreateUserTypeDto, UserType>();
+
+            // updateDto
+            CreateMap<UpdateUserTypeDto, UserType>();
+
+            // detailsVm
+            CreateMap<UserType, UserTypeDetailsVm>();
+            
+            // lookupDto
+            CreateMap<UserType, UserTypeLookupDto>();
         }
     }
 }

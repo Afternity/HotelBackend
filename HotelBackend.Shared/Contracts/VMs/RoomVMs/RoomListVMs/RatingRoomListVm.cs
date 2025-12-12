@@ -4,6 +4,6 @@ namespace HotelBackend.Shared.Contracts.VMs.RoomVMs.RoomListVMs
 {
     public class RatingRoomListVm
     {
-        public ICollection<RoomLookupDto> RatingRoomLookups { get; set; } = [];
+        public ICollection<RatingRoomLookupDto> RatingRoomLookups { get; set; } = [];
     }
 }
