@@ -30,7 +30,7 @@ namespace HotelBackend.Domain.Interfaces.InterfacesServices
         /// GetUserBookingDto для единообразия.
         /// </summary>
         Task<UserBookingListVm> GetAllByUserAsync(
-            GetUserBookingDto findDto,
+            GetUserBookingsDto findDto,
             CancellationToken cancellationToken);
 
         /// <summary>

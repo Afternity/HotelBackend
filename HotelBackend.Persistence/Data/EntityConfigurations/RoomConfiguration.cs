@@ -13,6 +13,10 @@ namespace HotelBackend.Persistence.Data.EntityConfigurations
             // ключи
             builder.HasKey(room => room.Id);
 
+            // индексы
+            builder.HasIndex(room => room.Number)
+                .IsUnique();
+
             // основные свойства
             builder.Property(room => room.Number)
                 .IsRequired(true)

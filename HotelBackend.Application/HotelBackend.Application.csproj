@@ -18,4 +18,10 @@
     <ProjectReference Include="..\HotelBackend.Domain\HotelBackend.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\Validators\PaymentDtoValidators\UpdatePaymentDtoValidators\" />
+    <Folder Include="Common\Validators\PaymentDtoValidators\GetPaymentDtoValidators\" />
+    <Folder Include="Common\Validators\PaymentDtoValidators\DeletePaymentDtoValidators\" />
+  </ItemGroup>
+
 </Project>
