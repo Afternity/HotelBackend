@@ -56,7 +56,7 @@ namespace HotelBackend.Domain.Interfaces.InterfacesServices
         /// <summary>
         /// Вывод всех Review определённой Room и определенного Rating, где IsDeleted = false
         /// </summary>
-        Task<RatingAndRoomReviewListVm> GetAllAsync(
+        Task<RatingAndRoomReviewListVm> GetAllByRatingAndRoomAsync(
             GetAllByRatingAndRoomReviewDto getAllDto,
             CancellationToken cancellationToken);
 

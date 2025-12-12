@@ -14,16 +14,30 @@ builder.Services.AddDatabaseService(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelBackend API v1");
+        options.RoutePrefix = string.Empty;
+    });
+}
+else
+{
+    app.UseExceptionHandler("/error"); 
+}
 
-//if (app.Environment.IsDevelopment())
-//{
-//    app.UseSwagger();
-//    app.UseSwaggerUI();
-//}
+app.Map("/error", (HttpContext context) =>
+{
+    var exception = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+    return Results.Problem(
+        title: "Произошла ошибка",
+        detail: exception?.Error?.Message,
+        statusCode: 500);
+});
 
-//app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();

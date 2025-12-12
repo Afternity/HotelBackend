@@ -1,95 +1,104 @@
-﻿
+﻿using HotelBackend.Domain.Interfaces.InterfacesServices;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.CreateRoomDTOs;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.DeleteRoomDTOs;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.GetRoomDTOs;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.UpdateRoomDTOs;
+using HotelBackend.Shared.Contracts.VMs.RoomVMs.RoomDetailsVMs;
+using HotelBackend.Shared.Contracts.VMs.RoomVMs.RoomListVMs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelBackend.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RoomController : ControllerBase
+    public class RoomController 
+        : ControllerBase
     {
-        //private readonly IRoomService _roomService;
-        //private readonly ILogger<RoomController> _logger;
+        private readonly IRoomService _roomService;
 
-        //public RoomController(
-        //    IRoomService roomService,
-        //    ILogger<RoomController> logger)
-        //{
-        //    _roomService = roomService;
-        //    _logger = logger;
-        //}
+        public RoomController(
+            IRoomService roomService)
+        {
+            _roomService = roomService;
+        }
 
-        //[HttpGet("get-room/{id}")]
-        //public async Task<ActionResult<RoomVm>> Get(
-        //    Guid id,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Started find room: {id}");
+        [HttpGet("get-by-id")]
+        public async Task<ActionResult<RoomDetailsVm>> Get(
+            [FromQuery] GetRoomDto getDto,
+            CancellationToken cancellationToken)
+        {
+            var room = await _roomService
+                .GetByIdAsync(getDto, cancellationToken);
 
-        //    var findDto = new FindAndDeleteRoomDto()
-        //    {
-        //        Id = id,
-        //    };
-            
-        //    var room =  await _roomService.GetByIdAsync(findDto, cancellationToken);
+            return room == null ? NotFound() : Ok(room);
+        }
 
-        //    _logger.LogInformation($"Ended find room: {nameof(findDto)}");
+        [HttpPost("create")]
+        public async Task<IActionResult> Create(
+            [FromBody] CreateRoomDto createDto,
+            CancellationToken cancellationToken)
+        {
+            var roomId = await _roomService
+                .CreateAsync(createDto, cancellationToken);
 
-        //    return Ok(room);
-        //}
+            if (roomId == Guid.Empty)
+                return BadRequest("Не удалось создать комнату");
 
-        //[HttpPost("create-room")]
-        //public async Task<IActionResult> Create(
-        //    [FromBody] CreateRoomDto createDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Started create room: {nameof(createDto)}");
+            return Ok(roomId);
+        }
 
-        //    var roomId = await _roomService.CreateAsync(createDto, cancellationToken);
+        [HttpPut("update")]
+        public async Task<IActionResult> Update(
+            [FromBody] UpdateRoomDto updateDto,
+            CancellationToken cancellationToken)
+        {
+            await _roomService
+                .UpdateAsync(updateDto, cancellationToken);
 
-        //    _logger.LogInformation($"Ended create room: {nameof(roomId)}");
+            return NoContent();
+        }
 
-        //    return Ok(roomId);
-        //}
+        [HttpDelete("hard-delete")]
+        public async Task<IActionResult> Delete(
+            [FromQuery] HardDeleteRoomDto hardDeleteDto,
+            CancellationToken cancellationToken)
+        {
+            await _roomService
+                .HardDeleteAsync(hardDeleteDto, cancellationToken);
 
-        //[HttpPut("update-room")]
-        //public async Task<IActionResult> Update(
-        //    [FromBody] UpdateRoomDto updateDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Started update room: {nameof(updateDto)}");
+            return NoContent();
+        }
 
-        //    await _roomService.UpdateAsync(updateDto, cancellationToken);
+        [HttpPatch("soft-delete")]
+        public async Task<IActionResult> SoftDelete(
+            [FromBody] SoftDeleteRoomDto softDeleteDto,
+            CancellationToken cancellationToken)
+        {
+            await _roomService
+                .SoftDeleteAsync(softDeleteDto, cancellationToken);
 
-        //    _logger.LogInformation($"Ended update room: {nameof(updateDto)}");
+            return NoContent();
+        }
 
-        //    return NoContent();
-        //}
+        [HttpGet("get-all")]
+        public async Task<ActionResult<RoomListVm>> GetAll(
+            CancellationToken cancellationToken)
+        {
+            var rooms = await _roomService
+                .GetAllAsync(cancellationToken);
 
-        //[HttpDelete("delete-room")]
-        //public async Task<IActionResult> Delete(
-        //    [FromBody] FindAndDeleteRoomDto deleteDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Started delete room: {nameof(deleteDto)}");
+            return Ok(rooms);
+        }
 
-        //    await _roomService.DeleteAsync(deleteDto, cancellationToken);
+        [HttpGet("get-by-rating")]
+        public async Task<ActionResult<RatingRoomListVm>> GetByRating(
+            [FromQuery] GetAllByRatingRoomDto getAllDto,
+            CancellationToken cancellationToken)
+        {
+            var rooms = await _roomService
+                .GetAllByRatingAsync(getAllDto, cancellationToken);
 
-        //    _logger.LogInformation($"Ended delete room: {nameof(deleteDto)}");
-
-        //    return NoContent();
-        //}
-
-        //[HttpGet("get-rooms")]
-        //public async Task<ActionResult<RoomListVm>> GetAll(
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Started get All rooms");
-
-        //    var rooms = await _roomService.GetAllAsync(cancellationToken);
-
-        //    _logger.LogInformation($"Ended get All rooms");
-
-        //    return Ok(rooms);
-        //}
+            return Ok(rooms);
+        }
     }
 }

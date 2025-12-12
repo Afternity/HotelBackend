@@ -1,94 +1,103 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HotelBackend.Domain.Interfaces.InterfacesServices;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.CreateUserDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.DeleteUserDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.GetUserDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.UpdateUserDTOs;
+using HotelBackend.Shared.Contracts.VMs.UserViewModes.UserListVMs;
+using HotelBackend.Shared.Contracts.VMs.UserVMs.UserDetailsVMs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HotelBackend.WebApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UserController 
+        : ControllerBase
     {
-        //private readonly IUserService _userService;
-        //private readonly ILogger<UserController> _logger;
+        private readonly IUserService _userService;
 
-        //public UserController(
-        //    IUserService userService,
-        //    ILogger<UserController> logger)
-        //{
-        //    _userService = userService;
-        //    _logger = logger;
-        //}
+        public UserController(
+            IUserService userService)
+        {
+            _userService = userService;
+        }
 
-        //[HttpGet("get-user/{id}")]
-        //public async Task<ActionResult<UserVm>> Get(
-        //    Guid id,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Started find user: {id}");
+        [HttpGet("get-by-id")]
+        public async Task<ActionResult<UserDetailsVm>> Get(
+            [FromQuery] GetUserDto getDto,
+            CancellationToken cancellationToken)
+        {
+            var user = await _userService
+                .GetByIdAsync(getDto, cancellationToken);
 
-        //    var findDto = new FindAndDeleteUserDto()
-        //    {
-        //        Id = id,
-        //    };
+            return user == null ? NotFound() : Ok(user);
+        }
 
-        //    var room = await _userService.GetByIdAsync(findDto, cancellationToken);
+        [HttpPost("create")]
+        public async Task<IActionResult> Create(
+            [FromBody] CreateUserDto createDto,
+            CancellationToken cancellationToken)
+        {
+            var userId = await _userService
+                .CreateAsync(createDto, cancellationToken);
 
-        //    _logger.LogInformation($"Ended find user: {nameof(findDto)}");
+            if (userId == Guid.Empty)
+                return BadRequest("Не удалось создать пользователя");
 
-        //    return Ok(room);
-        //}
+            return Ok(userId);
+        }
 
-        //[HttpPost("create-user")]
-        //public async Task<IActionResult> Create(
-        //    [FromBody] CreateUserDto createDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Started create user: {nameof(createDto)}");
+        [HttpPut("update")]
+        public async Task<IActionResult> Update(
+            [FromBody] UpdateUserDto updateDto,
+            CancellationToken cancellationToken)
+        {
+            await _userService
+                .UpdateAsync(updateDto, cancellationToken);
 
-        //    var roomId = await _userService.CreateAsync(createDto, cancellationToken);
+            return NoContent();
+        }
 
-        //    _logger.LogInformation($"Ended create user: {nameof(roomId)}");
+        [HttpDelete("hard-delete")]
+        public async Task<IActionResult> Delete(
+            [FromQuery] HardDeleteUserDto hardDeleteDto,
+            CancellationToken cancellationToken)
+        {
+            await _userService
+                .HardDeleteAsync(hardDeleteDto, cancellationToken);
 
-        //    return Ok(roomId);
-        //}
+            return NoContent();
+        }
 
-        //[HttpPut("update-user")]
-        //public async Task<IActionResult> Update(
-        //    [FromBody] UpdateUserDto updateDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Started update user: {nameof(updateDto)}");
+        [HttpPatch("soft-delete")]
+        public async Task<IActionResult> SoftDelete(
+            [FromBody] SoftDeleteUserDto softDeleteDto,
+            CancellationToken cancellationToken)
+        {
+            await _userService
+                .SoftDeleteAsync(softDeleteDto, cancellationToken);
 
-        //    await _userService.UpdateAsync(updateDto, cancellationToken);
+            return NoContent();
+        }
 
-        //    _logger.LogInformation($"Ended update user: {nameof(updateDto)}");
+        [HttpGet("get-all")]
+        public async Task<ActionResult<UserListVm>> GetAll(
+            CancellationToken cancellationToken)
+        {
+            var users = await _userService
+                .GetAllAsync(cancellationToken);
 
-        //    return NoContent();
-        //}
+            return Ok(users);
+        }
 
-        //[HttpDelete("delete-user")]
-        //public async Task<IActionResult> Delete(
-        //    [FromBody] FindAndDeleteUserDto deleteDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Started delete user: {nameof(deleteDto)}");
+        [HttpGet("get-all-by-booking")]
+        public async Task<ActionResult<UserListVm>> GetAllByBooking(
+            CancellationToken cancellationToken)
+        {
+            var users = await _userService
+                .GetAllByBookingAsync(cancellationToken);
 
-        //    await _userService.DeleteAsync(deleteDto, cancellationToken);
-
-        //    _logger.LogInformation($"Ended delete user: {nameof(deleteDto)}");
-
-        //    return NoContent();
-        //}
-
-        //[HttpGet("get-users")]
-        //public async Task<ActionResult<RoomListVm>> GetAll(
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Started get All users");
-
-        //    var rooms = await _userService.GetAllAsync(cancellationToken);
-
-        //    _logger.LogInformation($"Ended get All users");
-
-        //    return Ok(rooms);
-        //}
+            return Ok(users);
+        }
     }
 }

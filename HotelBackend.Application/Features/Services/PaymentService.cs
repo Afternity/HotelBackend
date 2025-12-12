@@ -22,6 +22,7 @@ namespace HotelBackend.Application.Features.Services
         // БД contracts
         private readonly IPaymentRepository _paymentRepository;
         private readonly IBookingRepository _bookingRepository;
+        private readonly IUserRepository _userRepository;
         // infrastructure
         private readonly IMapper _mapper;
         private readonly ILogger<PaymentService> _logger;
@@ -37,6 +38,7 @@ namespace HotelBackend.Application.Features.Services
         public PaymentService(
             IPaymentRepository paymentRepository,
             IBookingRepository bookingRepository,
+            IUserRepository userRepository,
             IMapper mapper,
             ILogger<PaymentService> logger,
             IValidator<CreatePaymentDto> createPaymentDtoValidator,
@@ -49,6 +51,7 @@ namespace HotelBackend.Application.Features.Services
             // БД contracts
             _paymentRepository = paymentRepository;
             _bookingRepository = bookingRepository;
+            _userRepository = userRepository;
             // infrastructure
             _mapper = mapper;
             _logger = logger;
@@ -122,9 +125,36 @@ namespace HotelBackend.Application.Features.Services
             };
         }
 
-        public Task<UserPaymentListVm> GetAllByUserAsync(GetAllByUserPaymentDto getAllDto, CancellationToken cancellationToken)
+        public async Task<UserPaymentListVm> GetAllByUserAsync(
+            GetAllByUserPaymentDto getAllDto, 
+            CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("Начало получение Payments, где IsDeleted == false , определенного User");
+
+            var validation = await _getAllByUserPaymentDto
+                .ValidateAsync(getAllDto, cancellationToken);
+
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
+
+            var user = await _userRepository
+                .GetByIdAsync(getAllDto.UserId, cancellationToken);
+
+            if (user == null)
+            {
+                _logger.LogWarning($"User не найден по Id: {getAllDto.UserId}");
+                return new UserPaymentListVm();
+            }
+
+            var payments = await _paymentRepository
+                .GetAllByUserAsync(user, cancellationToken);
+
+            _logger.LogInformation("Payments, где IsDeleted == false, получены");
+
+            return new UserPaymentListVm()
+            {
+                UserPaymentLookups = _mapper.Map<IList<UserPaymentLookupDto>>(payments)
+            };
         }
 
         public async Task<PaymentDetailsVm?> GetByIdAsync(

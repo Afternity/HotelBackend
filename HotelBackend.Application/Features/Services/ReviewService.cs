@@ -124,7 +124,7 @@ namespace HotelBackend.Application.Features.Services
             };
         }
 
-        public async Task<RatingAndRoomReviewListVm> GetAllAsync(
+        public async Task<RatingAndRoomReviewListVm> GetAllByRatingAndRoomAsync(
             GetAllByRatingAndRoomReviewDto getAllDto,
             CancellationToken cancellationToken)
         {
