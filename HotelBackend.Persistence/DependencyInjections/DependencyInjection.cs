@@ -1,6 +1,7 @@
 ﻿
 using HotelBackend.Domain.Interfaces.InterfacesRepositories;
 using HotelBackend.Persistence.Data.DbContexts;
+using HotelBackend.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +40,12 @@ namespace HotelBackend.Persistence.DependencyInjections
 
             });
 
-           
+            services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IUserTypeRepository, UserTypeRepository>();
 
             return services;
         }

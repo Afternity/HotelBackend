@@ -1,124 +1,223 @@
-﻿using HotelBackend.Application.Common.Exceptions;
-using HotelBackend.Domain.Interfaces.InterfacesRepositories;
-using HotelBackend.Domain.Models;
-using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
 using FluentValidation;
-using AutoMapper;
+using Microsoft.Extensions.Logging;
+using HotelBackend.Domain.Interfaces.InterfacesRepositories;
+using HotelBackend.Domain.Interfaces.InterfacesServices;
+using HotelBackend.Domain.Models;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.DeleteUserDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.CreateUserTypeDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.DeleteUserTypeDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.GetUserTypeDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.UpdateUserTypeDTOs;
+using HotelBackend.Shared.Contracts.VMs.UserTypeViewModels.UserTypeDatailsVMs;
+using HotelBackend.Shared.Contracts.VMs.UserTypeVMs.UserTypeListVMs;
+using HotelBackend.Shared.Contracts.VMs.UserTypeVMs.UserTypeLookupDTOs;
 
 
 namespace HotelBackend.Application.Features.Services
 {
-    public class UserTypeService 
+    public class UserTypeService
+        : IUserTypeService
     {
+        // БД contracts
         private readonly IUserTypeRepository _userTypeRepository;
-        private readonly ILogger<UserTypeService> _logger;
+        // infrastructure
         private readonly IMapper _mapper;
-        //private readonly IValidator<CreateUserTypeDto> _createUserTypeDtoValidator;
-        //private readonly IValidator<UpdateUserTypeDto> _updateUserTypeDtoValidator;
-        //private readonly IValidator<FindAndDeleteUserTypeDto> _findAndDeleteUserTypeDtoValidator;
+        private readonly ILogger<UserTypeService> _logger;
+        // CUD validators
+        private readonly IValidator<CreateUserTypeDto> _createUserTypeDtoValidator;
+        private readonly IValidator<UpdateUserTypeDto> _updateUserTypeDtoValidator;
+        private readonly IValidator<HardDeleteUserTypeDto> _hardDeleteUserTypeDtoValidator;
+        private readonly IValidator<SoftDeleteUserTypeDto> _softDeleteUserTypeDtoValidator;
+        // R validators
+        private readonly IValidator<GetUserTypeDto> _getUserTypeDtoValidator;
 
-        //public UserTypeService(
-        //    IUserTypeRepository userTypeRepository,
-        //    ILogger<UserTypeService> logger,
-        //    IMapper mapper,
-        //    IValidator<CreateUserTypeDto> createUserTypeDtoValidator,
-        //    IValidator<UpdateUserTypeDto> updateUserTypeDtoValidator,
-        //    IValidator<FindAndDeleteUserTypeDto> findAndDeleteUserTypeDtoValidator)
-        //{
-        //    _userTypeRepository = userTypeRepository;
-        //    _logger = logger;
-        //    _mapper = mapper;
-        //    _createUserTypeDtoValidator = createUserTypeDtoValidator;
-        //    _updateUserTypeDtoValidator = updateUserTypeDtoValidator;
-        //    _findAndDeleteUserTypeDtoValidator = findAndDeleteUserTypeDtoValidator;
-        //}
+        public UserTypeService(
+            IUserTypeRepository userTypeRepository,
+            IMapper mapper,
+            ILogger<UserTypeService> logger,
+            IValidator<CreateUserTypeDto> createUserTypeDtoValidator,
+            IValidator<UpdateUserTypeDto> updateUserTypeDtoValidator,
+            IValidator<HardDeleteUserTypeDto> hardDeleteUserTypeDtoValidator,
+            IValidator<SoftDeleteUserTypeDto> softDeleteUserTypeDtoValidator,
+            IValidator<GetUserTypeDto> getUserTypeDtoValidator)
+        {
+            // БД contracts
+            _userTypeRepository = userTypeRepository;
+            // infrastructure
+            _mapper = mapper;
+            _logger = logger;
+            // CUD validators
+            _createUserTypeDtoValidator = createUserTypeDtoValidator;
+            _updateUserTypeDtoValidator = updateUserTypeDtoValidator;
+            _hardDeleteUserTypeDtoValidator = hardDeleteUserTypeDtoValidator;
+            _softDeleteUserTypeDtoValidator = softDeleteUserTypeDtoValidator;
+            // R validators
+            _getUserTypeDtoValidator = getUserTypeDtoValidator;
+        }
 
-        //public async Task<Guid> CreateAsync(
-        //    CreateUserTypeDto createDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Create UserType: {nameof(createDto)}");
+        public async Task<Guid> CreateAsync(
+            CreateUserTypeDto createDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Начало создания UserType.");
 
-        //    var validationResult = await _createUserTypeDtoValidator.ValidateAsync(createDto, cancellationToken);
-        //    if (!validationResult.IsValid)
-        //        throw new ValidationException(validationResult.Errors);
+            var validation = await _createUserTypeDtoValidator
+                .ValidateAsync(createDto, cancellationToken);
 
-        //    var userType = _mapper.Map<UserType>(createDto);
-        //    var userTypeId = await _userTypeRepository.CreateAsync(userType, cancellationToken);
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //    _logger.LogInformation($"UserType created, ID: {userTypeId}");
-        //    return userTypeId;
-        //}
+            var newUserType = new UserType()
+            {
+                Id = Guid.NewGuid(),
+                Type = createDto.Type,
+                CreatedAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
 
-        //public async Task DeleteAsync(
-        //    FindAndDeleteUserTypeDto deleteDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Delete UserType: {nameof(deleteDto)}");
+            await _userTypeRepository
+                .CreateAsync(newUserType, cancellationToken);
 
-        //    var validationResult = await _findAndDeleteUserTypeDtoValidator.ValidateAsync(deleteDto, cancellationToken);
-        //    if (!validationResult.IsValid)
-        //        throw new ValidationException(validationResult.Errors);
+            _logger.LogInformation($"UserType создан с Id: {newUserType.Id}");
 
-        //    var userType = await _userTypeRepository.GetByIdAsync(deleteDto.Id, cancellationToken);
-        //    if (userType == null)
-        //        throw new NotFoundException(nameof(UserType), deleteDto.Id);
+            return newUserType.Id;
+        }
 
-        //    await _userTypeRepository.DeleteAsync(userType, cancellationToken);
-        //    _logger.LogInformation($"UserType deleted, ID: {deleteDto.Id}");
-        //}
+        public async Task<UserTypeListVm> GetAllAsync(
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Начало получения UserTypes, где IsDeleted == false");
 
-        //public async Task<UserTypeListVm> GetAllAsync(
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation("Get all UserTypes");
+            var userTypes = await _userTypeRepository
+                .GetAllAsync(cancellationToken);
 
-        //    var userTypes = await _userTypeRepository.GetAllAsync(cancellationToken);
-        //    var result = new UserTypeListVm
-        //    {
-        //        UserTypes = _mapper.Map<IList<UserTypeLookupDto>>(userTypes)
-        //    };
+            _logger.LogInformation("UserTypes, где IsDeleted == false, получены");
 
-        //    _logger.LogInformation($"Retrieved {userTypes.Count} UserTypes");
-        //    return result;
-        //}
+            return new UserTypeListVm()
+            {
+                UserTypeLookups = _mapper.Map<IList<UserTypeLookupDto>>(userTypes)
+            };
+        }
 
-        //public async Task<UserTypeVm> GetByIdAsync(
-        //    FindAndDeleteUserTypeDto findDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Get UserType: {nameof(findDto)}");
+        public async Task<UserTypeDetailsVm?> GetByIdAsync(
+            GetUserTypeDto getDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало получения UserType по Id: {getDto.Id}");
 
-        //    var validationResult = await _findAndDeleteUserTypeDtoValidator.ValidateAsync(findDto, cancellationToken);
-        //    if (!validationResult.IsValid)
-        //        throw new ValidationException(validationResult.Errors);
+            var validation = await _getUserTypeDtoValidator
+                .ValidateAsync(getDto, cancellationToken);
 
-        //    var userType = await _userTypeRepository.GetByIdAsync(findDto.Id, cancellationToken);
-        //    if (userType == null)
-        //        throw new NotFoundException(nameof(UserType), findDto.Id);
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //    _logger.LogInformation($"UserType found, ID: {findDto.Id}");
-        //    return _mapper.Map<UserTypeVm>(userType);
-        //}
+            var userType = await _userTypeRepository
+                .GetByIdAsync(getDto.Id, cancellationToken);
 
-        //public async Task UpdateAsync(
-        //    UpdateUserTypeDto updateDto, 
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Update UserType: {nameof(updateDto)}");
+            if (userType == null)
+            {
+                _logger.LogWarning($"UserType не найден по Id: {getDto.Id}");
+                return null;
+            }
 
-        //    var validationResult = await _updateUserTypeDtoValidator.ValidateAsync(updateDto, cancellationToken);
-        //    if (!validationResult.IsValid)
-        //        throw new ValidationException(validationResult.Errors);
+            _logger.LogInformation($"UserType найден по Id: {getDto.Id}");
 
-        //    var existingUserType = await _userTypeRepository.GetByIdAsync(updateDto.Id, cancellationToken);
-        //    if (existingUserType == null)
-        //        throw new NotFoundException(nameof(UserType), updateDto.Id);
+            return _mapper.Map<UserTypeDetailsVm>(userType);
+        }
 
-        //    var updatedUserType = _mapper.Map(updateDto, existingUserType);
-        //    await _userTypeRepository.UpdateAsync(updatedUserType, cancellationToken);
+        public async Task HardDeleteAsync(
+            HardDeleteUserTypeDto hardDeleteDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало полного удаления UserType по Id: {hardDeleteDto.Id}");
 
-        //    _logger.LogInformation($"UserType updated, ID: {updateDto.Id}");
-        //}
+            var validation = await _hardDeleteUserTypeDtoValidator
+                .ValidateAsync(hardDeleteDto, cancellationToken);
+
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
+
+            var userType = await _userTypeRepository
+                .GetByIdAsync(hardDeleteDto.Id, cancellationToken);
+
+            if (userType == null)
+            {
+                _logger.LogWarning($"UserType не найден по Id: {hardDeleteDto.Id}");
+                return;
+            }
+
+            // Проверяем, нет ли пользователей с этим типом
+            if (userType.Users != null && userType.Users.Any())
+            {
+                _logger.LogWarning($"Невозможно удалить UserType с Id: {hardDeleteDto.Id}, так как есть связанные пользователи");
+                throw new InvalidOperationException("Невозможно удалить тип пользователя, так как есть связанные пользователи");
+            }
+
+            await _userTypeRepository
+                .HardDeleteAsync(userType, cancellationToken);
+
+            _logger.LogInformation($"UserType полностью удален по Id: {hardDeleteDto.Id}");
+        }
+
+        public async Task SoftDeleteAsync(
+            SoftDeleteUserTypeDto softDeleteDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало мягкого удаления UserType по Id: {softDeleteDto.Id}");
+
+            var validation = await _softDeleteUserTypeDtoValidator
+                .ValidateAsync(softDeleteDto, cancellationToken);
+
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
+
+            var userType = await _userTypeRepository
+                .GetByIdAsync(softDeleteDto.Id, cancellationToken);
+
+            if (userType == null)
+            {
+                _logger.LogWarning($"UserType не найден по Id: {softDeleteDto.Id}");
+                return;
+            }
+
+            userType.DeletedAt = DateTime.UtcNow;
+            userType.IsDeleted = true;
+
+            await _userTypeRepository
+                .SoftDeleteAsync(userType, cancellationToken);
+
+            _logger.LogInformation($"UserType мягко удалён по Id: {softDeleteDto.Id}");
+        }
+
+        public async Task UpdateAsync(
+            UpdateUserTypeDto updateDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало обновления UserType по Id: {updateDto.Id}");
+
+            var validation = await _updateUserTypeDtoValidator
+                .ValidateAsync(updateDto, cancellationToken);
+
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
+
+            var userType = await _userTypeRepository
+                .GetByIdAsync(updateDto.Id, cancellationToken);
+
+            if (userType == null)
+            {
+                _logger.LogWarning($"UserType не найден по Id: {updateDto.Id}");
+                return;
+            }
+
+            userType.Type = updateDto.Type;
+            userType.UpdatedAt = DateTime.UtcNow;
+
+            await _userTypeRepository
+                .UpdateAsync(userType, cancellationToken);
+
+            _logger.LogInformation($"UserType обновлён по Id: {updateDto.Id}");
+        }
     }
 }

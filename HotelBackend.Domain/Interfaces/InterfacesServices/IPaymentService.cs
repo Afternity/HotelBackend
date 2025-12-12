@@ -1,5 +1,6 @@
 ﻿using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.DeleteBookingDTOs;
 using HotelBackend.Shared.Contracts.DTOs.PaymentDTOs.CreatePaymentDTOs;
+using HotelBackend.Shared.Contracts.DTOs.PaymentDTOs.DeletePaymentDTOs;
 using HotelBackend.Shared.Contracts.DTOs.PaymentDTOs.GetPaymentDTOs;
 using HotelBackend.Shared.Contracts.DTOs.PaymentDTOs.UpdatePaymentDTOs;
 using HotelBackend.Shared.Contracts.VMs.PaymentVMs.PaymentDetailsVMs;
@@ -33,18 +34,18 @@ namespace HotelBackend.Domain.Interfaces.InterfacesServices
 
         /// <summary>
         /// Полное удаление Payment.
-        /// HardDeleteBookingDto для единообразия.
+        /// HardDeletePaymentDto для единообразия.
         /// </summary>
         Task HardDeleteAsync(
-            HardDeleteBookingDto hardDeleteDto,
+            HardDeletePaymentDto hardDeleteDto,
             CancellationToken cancellationToken);
 
         /// <summary>
         /// Мягкое удаление Payment.
-        /// SoftDeleteBookingDto для единообразия.
+        /// SoftDeletePaymentDto для единообразия.
         /// </summary>
         Task SoftDeleteAsync(
-            SoftDeleteBookingDto softDeleteDto,
+            SoftDeletePaymentDto softDeleteDto,
             CancellationToken cancellationToken);
 
         /// <summary>

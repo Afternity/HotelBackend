@@ -16,7 +16,7 @@ namespace HotelBackend.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<Guid> CreateAsync(
+        public async Task CreateAsync(
             Booking booking,
             CancellationToken cancellationToken)
         {
@@ -24,8 +24,6 @@ namespace HotelBackend.Persistence.Repositories
                 .AddAsync(booking, cancellationToken);
             await _context
                 .SaveChangesAsync(cancellationToken);
-
-            return booking.Id;
         }
 
         public async Task<IList<Booking>> GetAllAsync(
@@ -57,7 +55,7 @@ namespace HotelBackend.Persistence.Repositories
                     cancellationToken);
         }
 
-        public async Task<Booking?> GetLastBookingByUser(
+        public async Task<Booking?> GetLastBookingByUserAsync(
             User user,
             CancellationToken cancellationToken)
         {

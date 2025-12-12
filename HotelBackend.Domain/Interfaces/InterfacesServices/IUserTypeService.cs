@@ -1,7 +1,7 @@
-﻿using HotelBackend.Shared.Contracts.DTOs.UserDTOs.DeleteUserDTOs;
-using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.CreateUserTypeDTOs;
+﻿using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.CreateUserTypeDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.DeleteUserTypeDTOs;
 using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.GetUserTypeDTOs;
-using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.UpdareUserTypeDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserTypeDTOs.UpdateUserTypeDTOs;
 using HotelBackend.Shared.Contracts.VMs.UserTypeViewModels.UserTypeDatailsVMs;
 using HotelBackend.Shared.Contracts.VMs.UserTypeVMs.UserTypeListVMs;
 
@@ -35,14 +35,14 @@ namespace HotelBackend.Domain.Interfaces.InterfacesServices
         /// Полное удаление UserType.
         /// </summary>
         Task HardDeleteAsync(
-            HardDeleteUserDto hardDeleteDto,
+            HardDeleteUserTypeDto hardDeleteDto,
             CancellationToken cancellationToken);
 
         /// <summary>
         /// Мягкое удаление UserType.
         /// </summary>
         Task SoftDeleteAsync(
-            SoftDeleteUserDto softDeleteDto,
+            SoftDeleteUserTypeDto softDeleteDto,
             CancellationToken cancellationToken);
 
         /// <summary>

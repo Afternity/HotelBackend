@@ -8,6 +8,9 @@ using HotelBackend.Shared.Contracts.VMs.BookingVMs.BookingLookupDTOs;
 
 namespace HotelBackend.Application.Common.Mappings
 {
+    /// <summary>
+    /// Есть большая оговорка. Mapper работает только на VMs.
+    /// </summary>
     public class BookingMappingProfile 
         : Profile
     {
@@ -24,6 +27,7 @@ namespace HotelBackend.Application.Common.Mappings
 
             // lookupDto
             CreateMap<Booking, BookingLookupDto>();
+            CreateMap<Booking, UserBookingLookupDto>();
         }
     }
 }

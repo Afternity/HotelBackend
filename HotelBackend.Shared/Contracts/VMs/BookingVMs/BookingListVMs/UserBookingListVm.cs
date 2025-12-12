@@ -4,6 +4,6 @@ namespace HotelBackend.Shared.Contracts.VMs.BookingVMs.BookingListVMs
 {
     public class UserBookingListVm
     {
-        public IList<BookingLookupDto> UserBookingLookups { get; set; } = [];
+        public IList<UserBookingLookupDto> UserBookingLookups { get; set; } = [];
     }
 }

@@ -7,6 +7,9 @@ using HotelBackend.Shared.Contracts.VMs.ReviewVMs.ReviewLookupDTOs;
 
 namespace HotelBackend.Application.Common.Mappings
 {
+    /// <summary>
+    /// Есть большая оговорка. Mapper работает только на VMs.
+    /// </summary>
     public class ReviewMappingProfile
         : Profile
     {

@@ -14,7 +14,7 @@ namespace HotelBackend.Domain.Interfaces.InterfacesRepositories
         /// <summary>
         /// Для пользоваателя
         /// </summary>
-        Task<Guid> CreateAsync(
+        Task CreateAsync(
             Payment payment,
             CancellationToken cancellationToken);
 

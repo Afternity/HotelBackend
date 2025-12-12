@@ -14,7 +14,7 @@ namespace HotelBackend.Domain.Interfaces.InterfacesRepositories
         /// <summary>
         /// Для пользователя
         /// </summary>
-        Task<Guid> CreateAsync(
+        Task CreateAsync(
             Booking booking,
             CancellationToken cancellationToken);
         
@@ -55,7 +55,7 @@ namespace HotelBackend.Domain.Interfaces.InterfacesRepositories
         /// <summary>
         /// Для пользователя
         /// </summary>
-        Task<Booking?> GetLastBookingByUser(
+        Task<Booking?> GetLastBookingByUserAsync(
             User user,
             CancellationToken cancellationToken);
     }

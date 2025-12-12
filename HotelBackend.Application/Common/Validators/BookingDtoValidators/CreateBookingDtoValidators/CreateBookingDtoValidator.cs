@@ -31,10 +31,6 @@ namespace HotelBackend.Application.Common.Validators.BookingDtoValidators.Create
                 .WithMessage("Максимальная продолжительность бронирования - 30 дней");
 
             // навиигационные поля
-            RuleFor(bookingDto => bookingDto.PaymentId)
-                .NotEmpty()
-                .WithMessage("Id платежа не выбрано.");
-
             RuleFor(bookingDto => bookingDto.RoomId)
                 .NotEmpty()
                 .WithMessage("Id комнаты не выбрано.");

@@ -16,7 +16,7 @@ namespace HotelBackend.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<Guid> CreateAsync(
+        public async Task CreateAsync(
             Review review,
             CancellationToken cancellationToken)
         {
@@ -24,8 +24,6 @@ namespace HotelBackend.Persistence.Repositories
                 .AddAsync(review, cancellationToken);
             await _context
                 .SaveChangesAsync(cancellationToken);
-
-            return review.Id;
         }
 
         public async Task<IList<Review>> GetAllAsync(

@@ -1,154 +1,250 @@
-﻿using HotelBackend.Domain.Interfaces.InterfacesRepositories;
-using HotelBackend.Application.Common.Exceptions;
-using HotelBackend.Domain.Models;
-using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
 using FluentValidation;
-using AutoMapper;
+using HotelBackend.Domain.Enums.RoomEnums;
+using HotelBackend.Domain.Interfaces.InterfacesRepositories;
+using HotelBackend.Domain.Interfaces.InterfacesServices;
+using HotelBackend.Domain.Models;
+using HotelBackend.Shared.Contracts.DTOs.ReviewDTOs.DeleteReviewDTOs;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.CreateRoomDTOs;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.DeleteRoomDTOs;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.GetRoomDTOs;
+using HotelBackend.Shared.Contracts.DTOs.RoomDTOs.UpdateRoomDTOs;
+using HotelBackend.Shared.Contracts.VMs.RoomVMs.RoomDetailsVMs;
+using HotelBackend.Shared.Contracts.VMs.RoomVMs.RoomListVMs;
+using HotelBackend.Shared.Contracts.VMs.RoomVMs.RoomLookupDTOs;
+using Microsoft.Extensions.Logging;
 
 namespace HotelBackend.Application.Features.Services
 {
-    public class RoomService 
+    public class RoomService
+        : IRoomService
     {
+        // БД contracts
         private readonly IRoomRepository _roomRepository;
-        private readonly ILogger<RoomService> _logger;
-
+        // infrastructure
         private readonly IMapper _mapper;
-        //private readonly IValidator<CreateRoomDto> _createRoomDtoValidator;
-        //private readonly IValidator<UpdateRoomDto> _updateRoomDtoValidator;
-        //private readonly IValidator<FindAndDeleteRoomDto> _findAndDeleteRoomDtoValidator;
+        private readonly ILogger<RoomService> _logger;
+        // CUD validators
+        private readonly IValidator<CreateRoomDto> _createRoomDtoValidator;
+        private readonly IValidator<UpdateRoomDto> _updateRoomDtoValidator;
+        private readonly IValidator<HardDeleteRoomDto> _hardDeleteRoomDtoValidator;
+        private readonly IValidator<SoftDeleteRoomDto> _softDeleteRoomDtoValidator;
+        // R validators
+        private readonly IValidator<GetRoomDto> _getRoomDtoValidator;
+        private readonly IValidator<GetAllByRatingRoomDto> _getAllByRatingRoomDtoValidator;
 
-        //public RoomService(
-        //    IRoomRepository roomRepository,
-        //    ILogger<RoomService> logger,
-        //    IMapper mapper,
-        //    IValidator<CreateRoomDto> createRoomDtoValidator,
-        //    IValidator<UpdateRoomDto> updateRoomDtoValidator,
-        //    IValidator<FindAndDeleteRoomDto> findAndDeleteRoomDtoValidator)
-        //{
-        //    _roomRepository = roomRepository;
-        //    _logger = logger;
-        //    _mapper = mapper;
-        //    _createRoomDtoValidator = createRoomDtoValidator;
-        //    _updateRoomDtoValidator = updateRoomDtoValidator;
-        //    _findAndDeleteRoomDtoValidator = findAndDeleteRoomDtoValidator;
-        //}
+        public RoomService(
+            IRoomRepository roomRepository,
+            IMapper mapper,
+            ILogger<RoomService> logger,
+            IValidator<CreateRoomDto> createRoomDtoValidator,
+            IValidator<UpdateRoomDto> updateRoomDtoValidator,
+            IValidator<HardDeleteRoomDto> hardDeleteRoomDtoValidator,
+            IValidator<SoftDeleteRoomDto> softDeleteRoomDtoValidator,
+            IValidator<GetRoomDto> getRoomDtoValidator,
+            IValidator<GetAllByRatingRoomDto> getAllByRatingRoomDtoValidator)
+        {
+            // БД contracts
+            _roomRepository = roomRepository;
+            // infrastructure
+            _mapper = mapper;
+            _logger = logger;
+            // CUD validators
+            _createRoomDtoValidator = createRoomDtoValidator;
+            _updateRoomDtoValidator = updateRoomDtoValidator;
+            _hardDeleteRoomDtoValidator = hardDeleteRoomDtoValidator;
+            _softDeleteRoomDtoValidator = softDeleteRoomDtoValidator;
+            // R validators
+            _getRoomDtoValidator = getRoomDtoValidator;
+            _getAllByRatingRoomDtoValidator = getAllByRatingRoomDtoValidator;
+        }
 
-        //public async Task<Guid> CreateAsync(
-        //    CreateRoomDto createDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Create room: {nameof(createDto)}");
+        public async Task<Guid> CreateAsync(
+            CreateRoomDto createDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Начало создания Room.");
 
-        //    var validationResult = await _createRoomDtoValidator
-        //        .ValidateAsync(createDto, cancellationToken);
+            var validation = await _createRoomDtoValidator
+                .ValidateAsync(createDto, cancellationToken);
 
-        //    if (validationResult.IsValid == false)
-        //        throw new ValidationException(validationResult.Errors);
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //    var createRoom = _mapper.Map<Room>(createDto);
+            var newRoom = new Room()
+            {
+                Id = Guid.NewGuid(),
 
-        //    _logger.LogInformation($"Validation and Mapping are successful");
+                Number = createDto.Number,
+                Class = (RoomClass)createDto.Class,
+                Description = createDto.Description,
+                PricePerNight = createDto.PricePerNight,
 
-        //    var roomId = await _roomRepository.CreateAsync(createRoom, cancellationToken);
+                CreatedAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
 
-        //    _logger.LogInformation($"Room is created, createRoom.Id = {roomId}");
+            await _roomRepository
+                .CreateAsync(newRoom, cancellationToken);
 
-        //    return roomId;
-        //}
+            _logger.LogInformation($"Room создана с Id: {newRoom.Id}");
 
-        //public async Task DeleteAsync(
-        //    FindAndDeleteRoomDto deleteDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Delete room: {nameof(deleteDto)}");
+            return newRoom.Id;
+        }
 
-        //    var validationResult = await _findAndDeleteRoomDtoValidator
-        //        .ValidateAsync(deleteDto, cancellationToken);
+        public async Task<RoomListVm> GetAllAsync(
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Начало получения Rooms, где IsDeleted == false");
 
-        //    if (validationResult.IsValid == false)
-        //        throw new ValidationException(validationResult.Errors);
+            var rooms = await _roomRepository
+                .GetAllAsync(cancellationToken);
 
-        //    _logger.LogInformation($"Validation is successful");
+            _logger.LogInformation("Rooms, где IsDeleted == false, получены");
 
-        //    var deleteRoom = await _roomRepository
-        //        .GetByIdAsync(deleteDto.Id, cancellationToken);
+            return new RoomListVm()
+            {
+                RoomLookups = _mapper.Map<IList<RoomLookupDto>>(rooms)
+            };
+        }
 
-        //    if (deleteRoom == null)
-        //        throw new NotFoundException(nameof(deleteRoom), deleteDto.Id);
+        public async Task<RatingRoomListVm> GetAllByRatingAsync(
+            GetAllByRatingRoomDto getAllDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало получения Rooms с рейтингом: {getAllDto.Rating}");
 
-        //    await _roomRepository.DeleteAsync(deleteRoom, cancellationToken);
+            var validation = await _getAllByRatingRoomDtoValidator
+                .ValidateAsync(getAllDto, cancellationToken);
 
-        //    _logger.LogInformation($"Room is deleted, deleteRoom.Id = {deleteRoom.Id}");
-        //}
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //public async Task<RoomListVm> GetAllAsync(
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Get All rooms");
+            var rooms = await _roomRepository
+                .GetAllByRatingAsync(getAllDto.Rating, cancellationToken);
 
-        //    var rooms = await _roomRepository
-        //        .GetAllAsync(cancellationToken);
+            _logger.LogInformation($"Rooms с рейтингом {getAllDto.Rating} получены");
 
-        //    _logger.LogInformation($"Rooms: {nameof(rooms)}");
+            return new RatingRoomListVm()
+            {
+                RatingRoomLookups = _mapper.Map<IList<RatingRoomLookupDto>>(rooms)
+            };
+        }
 
-        //    return new RoomListVm()
-        //    {
-        //        Rooms = _mapper.Map<IList<RoomLookupDto>>(rooms)
-        //    };
-        //}
+        public async Task<RoomDetailsVm?> GetByIdAsync(
+            GetRoomDto getDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало получения Room по Id: {getDto.Id}");
 
-        //public async Task<RoomVm> GetByIdAsync(
-        //    FindAndDeleteRoomDto findDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Get room: {nameof(findDto)}");
+            var validation = await _getRoomDtoValidator
+                .ValidateAsync(getDto, cancellationToken);
 
-        //    var validationResult = await _findAndDeleteRoomDtoValidator
-        //        .ValidateAsync(findDto);
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //    if (validationResult.IsValid == false)
-        //        throw new ValidationException(validationResult.Errors);
+            var room = await _roomRepository
+                .GetByIdAsync(getDto.Id, cancellationToken);
 
-        //    _logger.LogInformation($"Validation is successful");
+            if (room == null)
+            {
+                _logger.LogWarning($"Room не найден по Id: {getDto.Id}");
+                return null;
+            }
 
-        //    var room = await _roomRepository
-        //        .GetByIdAsync(findDto.Id, cancellationToken);
+            _logger.LogInformation($"Room найден по Id: {getDto.Id}");
 
-        //    if (room == null)
-        //        throw new NotFoundException(nameof(room), findDto.Id);
+            return _mapper.Map<RoomDetailsVm>(room);
+        }
 
-        //    _logger.LogInformation($"Room: {room.Id}");
+        public async Task HardDeleteAsync(
+            HardDeleteRoomDto hardDeleteDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало полного удаления Room по Id: {hardDeleteDto.Id}");
 
-        //    return _mapper.Map<RoomVm>(room);
-        //}
+            var validation = await _hardDeleteRoomDtoValidator
+                .ValidateAsync(hardDeleteDto, cancellationToken);
 
-        //public async Task UpdateAsync(
-        //    UpdateRoomDto updateDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Update room: {nameof(updateDto)}");
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //    var validationResult = await _updateRoomDtoValidator
-        //        .ValidateAsync(updateDto);
+            var room = await _roomRepository
+                .GetByIdAsync(hardDeleteDto.Id, cancellationToken);
 
-        //    if (validationResult.IsValid == false)
-        //        throw new ValidationException(validationResult.Errors);
+            if (room == null)
+            {
+                _logger.LogWarning($"Room не найден по Id: {hardDeleteDto.Id}");
+                return;
+            }
 
-        //    _logger.LogInformation($"Validation is successful");
+            await _roomRepository
+                .HardDeleteAsync(room, cancellationToken);
 
-        //    var existingRoom = await _roomRepository
-        //        .GetByIdAsync(updateDto.Id, cancellationToken);
+            _logger.LogInformation($"Room полностью удален по Id: {hardDeleteDto.Id}");
+        }
 
-        //    if (existingRoom == null)
-        //        throw new NotFoundException(nameof(existingRoom), updateDto.Id);
+        public async Task SoftDeleteAsync(
+            SoftDeleteRoomDto softDeleteDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало мягкого удаления Room по Id: {softDeleteDto.Id}");
 
-        //    var updateRoom = _mapper.Map(updateDto, existingRoom);
+            var validation = await _softDeleteRoomDtoValidator
+                .ValidateAsync(softDeleteDto, cancellationToken);
 
-        //    _logger.LogInformation($"Mapping is successful");
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //    await _roomRepository.UpdateAsync(updateRoom, cancellationToken);
+            var room = await _roomRepository
+                .GetByIdAsync(softDeleteDto.Id, cancellationToken);
 
-        //    _logger.LogInformation($"Room is updated, updateRoom.Id = {updateRoom.Id}");
-        //}
+            if (room == null)
+            {
+                _logger.LogWarning($"Room не найден по Id: {softDeleteDto.Id}");
+                return;
+            }
+
+            room.DeletedAt = DateTime.UtcNow;
+            room.IsDeleted = true;
+
+            await _roomRepository
+                .SoftDeleteAsync(room, cancellationToken);
+
+            _logger.LogInformation($"Room мягко удалён по Id: {softDeleteDto.Id}");
+        }
+
+        public async Task UpdateAsync(
+            UpdateRoomDto updateDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало обновления Room по Id: {updateDto.Id}");
+
+            var validation = await _updateRoomDtoValidator
+                .ValidateAsync(updateDto, cancellationToken);
+
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
+
+            var room = await _roomRepository
+                .GetByIdAsync(updateDto.Id, cancellationToken);
+
+            if (room == null)
+            {
+                _logger.LogWarning($"Room не найден по Id: {updateDto.Id}");
+                return;
+            }
+
+            room.Number = updateDto.Number;
+            room.Class = (RoomClass)updateDto.Class;
+            room.Description = updateDto.Description;
+            room.PricePerNight = updateDto.PricePerNight;
+            room.UpdatedAt = DateTime.UtcNow;
+
+            await _roomRepository
+                .UpdateAsync(room, cancellationToken);
+
+            _logger.LogInformation($"Room обновлён по Id: {updateDto.Id}");
+        }
     }
 }

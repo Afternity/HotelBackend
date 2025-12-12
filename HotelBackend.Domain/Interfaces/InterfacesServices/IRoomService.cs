@@ -34,10 +34,10 @@ namespace HotelBackend.Domain.Interfaces.InterfacesServices
 
         /// <summary>
         /// Полное удаление Room.
-        /// HardDeleteReviewDto для единоодразия.
+        /// HardDeleteRoomDto для единоодразия.
         /// </summary>
         Task HardDeleteAsync(
-            HardDeleteReviewDto hardDeleteDto,
+            HardDeleteRoomDto hardDeleteDto,
             CancellationToken cancellationToken);
 
         /// <summary>

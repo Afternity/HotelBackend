@@ -2,8 +2,8 @@
 using HotelBackend.Shared.Contracts.DTOs.UserDTOs.DeleteUserDTOs;
 using HotelBackend.Shared.Contracts.DTOs.UserDTOs.GetUserDTOs;
 using HotelBackend.Shared.Contracts.DTOs.UserDTOs.UpdateUserDTOs;
-using HotelBackend.Shared.Contracts.VMs.UserViewModes.UserDetailsVMs;
 using HotelBackend.Shared.Contracts.VMs.UserViewModes.UserListVMs;
+using HotelBackend.Shared.Contracts.VMs.UserVMs.UserDetailsVMs;
 
 namespace HotelBackend.Domain.Interfaces.InterfacesServices
 {

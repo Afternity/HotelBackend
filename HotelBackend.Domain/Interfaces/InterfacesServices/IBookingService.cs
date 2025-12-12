@@ -30,7 +30,7 @@ namespace HotelBackend.Domain.Interfaces.InterfacesServices
         /// GetUserBookingDto для единообразия.
         /// </summary>
         Task<UserBookingListVm> GetAllByUserAsync(
-            GetUserBookingsDto findDto,
+            GetUserBookingsDto getDto,
             CancellationToken cancellationToken);
 
         /// <summary>
@@ -59,14 +59,14 @@ namespace HotelBackend.Domain.Interfaces.InterfacesServices
         /// Мягкое удаление бронирования.
         /// </summary>
         Task SoftDeleteAsync(
-            HardDeleteBookingDto hardDeleteDto,
+            SoftDeleteBookingDto hardDeleteDto,
             CancellationToken cancellationToken);
 
         /// <summary>
         /// Получение последнего бронирования.
         /// Проверкаа происходит по дате.
         /// </summary>
-        Task GetLastBookingByUserAsync(
+        Task<BookingDetailsVm?> GetLastBookingByUserAsync(
             GetLastUserBookingDto getDto,
             CancellationToken cancellationToken);
     }

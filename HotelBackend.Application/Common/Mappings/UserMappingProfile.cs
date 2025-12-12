@@ -7,6 +7,9 @@ using HotelBackend.Shared.Contracts.VMs.UserVMs.UserLookupDTOs;
 
 namespace HotelBackend.Application.Common.Mappings
 {
+    /// <summary>
+    /// Есть большая оговорка. Mapper работает только на VMs.
+    /// </summary>
     public class UserMappingProfile : Profile
     {
         public UserMappingProfile()

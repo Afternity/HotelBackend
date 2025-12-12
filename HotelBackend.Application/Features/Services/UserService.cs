@@ -1,154 +1,266 @@
-﻿using HotelBackend.Application.Common.Exceptions;
-using HotelBackend.Domain.Interfaces.InterfacesRepositories;
-using HotelBackend.Domain.Models;
-using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
 using FluentValidation;
-using AutoMapper;
+using HotelBackend.Domain.Interfaces.InterfacesRepositories;
+using HotelBackend.Domain.Interfaces.InterfacesServices;
+using HotelBackend.Domain.Models;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.CreateUserDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.DeleteUserDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.GetUserDTOs;
+using HotelBackend.Shared.Contracts.DTOs.UserDTOs.UpdateUserDTOs;
+using HotelBackend.Shared.Contracts.VMs.UserViewModes.UserListVMs;
+using HotelBackend.Shared.Contracts.VMs.UserVMs.UserDetailsVMs;
+using HotelBackend.Shared.Contracts.VMs.UserVMs.UserLookupDTOs;
+using Microsoft.Extensions.Logging;
 
 namespace HotelBackend.Application.Features.Services
 {
-    public class UserService 
+    public class UserService
+        : IUserService
     {
+        // БД contracts
         private readonly IUserRepository _userRepository;
-        private readonly ILogger<UserService> _logger;
-
+        private readonly IUserTypeRepository _userTypeRepository;
+        // infrastructure
         private readonly IMapper _mapper;
-        //private readonly IValidator<CreateUserDto> _createUserDtoValidator;
-        //private readonly IValidator<UpdateUserDto> _updateUserDtoValidator;
-        //private readonly IValidator<FindAndDeleteUserDto> _findAndDeleteUserDtoValidator;
+        private readonly ILogger<UserService> _logger;
+        // CUD validators
+        private readonly IValidator<CreateUserDto> _createUserDtoValidator;
+        private readonly IValidator<UpdateUserDto> _updateUserDtoValidator;
+        private readonly IValidator<HardDeleteUserDto> _hardDeleteUserDtoValidator;
+        private readonly IValidator<SoftDeleteUserDto> _softDeleteUserDtoValidator;
+        // R validators
+        private readonly IValidator<GetUserDto> _getUserDtoValidator;
 
-        //public UserService(
-        //    IUserRepository userRpository,
-        //    ILogger<UserService> logger,
-        //    IMapper mapper,
-        //    IValidator<CreateUserDto> createUserDtoValidator,
-        //    IValidator<UpdateUserDto> updateUserDtoValidator,
-        //    IValidator<FindAndDeleteUserDto> findAndDeleteUserDtoValidator)
-        //{
-        //    _userRepository = userRpository;
-        //    _logger = logger;
-        //    _mapper = mapper;
-        //    _createUserDtoValidator = createUserDtoValidator;
-        //    _updateUserDtoValidator = updateUserDtoValidator;
-        //    _findAndDeleteUserDtoValidator = findAndDeleteUserDtoValidator;
-        //}
+        public UserService(
+            IUserRepository userRepository,
+            IUserTypeRepository userTypeRepository,
+            IMapper mapper,
+            ILogger<UserService> logger,
+            IValidator<CreateUserDto> createUserDtoValidator,
+            IValidator<UpdateUserDto> updateUserDtoValidator,
+            IValidator<HardDeleteUserDto> hardDeleteUserDtoValidator,
+            IValidator<SoftDeleteUserDto> softDeleteUserDtoValidator,
+            IValidator<GetUserDto> getUserDtoValidator)
+        {
+            // БД contracts
+            _userRepository = userRepository;
+            _userTypeRepository = userTypeRepository;
+            // infrastructure
+            _mapper = mapper;
+            _logger = logger;
+            // CUD validators
+            _createUserDtoValidator = createUserDtoValidator;
+            _updateUserDtoValidator = updateUserDtoValidator;
+            _hardDeleteUserDtoValidator = hardDeleteUserDtoValidator;
+            _softDeleteUserDtoValidator = softDeleteUserDtoValidator;
+            // R validators
+            _getUserDtoValidator = getUserDtoValidator;
+        }
 
-        //public async Task<Guid> CreateAsync(
-        //    CreateUserDto createDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Create user: {nameof(createDto)}");
+        /// <summary>
+        /// Авторизация. Надо поменять реализацию default UserType.
+        /// </summary>
+        /// <param name="createDto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ValidationException"></exception>
+        public async Task<Guid> CreateAsync(
+            CreateUserDto createDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Начало создания User.");
 
-        //    var validationResult = await _createUserDtoValidator
-        //        .ValidateAsync(createDto, cancellationToken);
+            var validation = await _createUserDtoValidator
+                .ValidateAsync(createDto, cancellationToken);
 
-        //    if (validationResult.IsValid == false)
-        //        throw new ValidationException(validationResult.Errors);
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //    var createUser = _mapper.Map<User>(createDto);
+            // По умолчанию устанавливаем обычного пользователя (предположим, что Id = 1)
+            var defaultUserType = await _userTypeRepository
+                .GetByIdAsync(Guid.Parse("00000000-0000-0000-0000-000000000001"), cancellationToken);
 
-        //    _logger.LogInformation($"Validation and Mapping are successful"); 
+            if (defaultUserType == null)
+            {
+                _logger.LogWarning($"UserType по умолчанию не найден");
+                return Guid.Empty;
+            }
 
-        //    var userId = await _userRepository.CreateAsync(createUser, cancellationToken);
+            var newUser = new User()
+            {
+                Id = Guid.NewGuid(),
 
-        //    _logger.LogInformation($"User is created, createUser.Id = {userId}");
+                Name = createDto.Name,
+                Email = createDto.Email,
+                Password = createDto.Password, 
 
-        //    return userId;
-        //}
+                UserTypeId = defaultUserType.Id,
 
-        //public async Task DeleteAsync(
-        //    FindAndDeleteUserDto deleteDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Delete user: {nameof(deleteDto)}");
+                CreatedAt = DateTime.UtcNow,
+                IsDeleted = false
+            };
 
-        //    var validationResult = await _findAndDeleteUserDtoValidator
-        //        .ValidateAsync(deleteDto, cancellationToken);
+            await _userRepository
+                .CreateAsync(newUser, cancellationToken);
 
-        //    if (validationResult.IsValid == false)
-        //        throw new ValidationException(validationResult.Errors);
+            _logger.LogInformation($"User создан с Id: {newUser.Id}");
 
-        //    _logger.LogInformation($"Validation is successful");
+            return newUser.Id;
+        }
 
-        //    var deleteUser = await _userRepository
-        //        .GetByIdAsync(deleteDto.Id, cancellationToken);
+        public async Task<UserListVm> GetAllAsync(
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Начало получения Users, где IsDeleted == false");
 
-        //    if (deleteUser == null)
-        //        throw new NotFoundException(nameof(deleteUser), deleteDto.Id);
+            var users = await _userRepository
+                .GetAllAsync(cancellationToken);
 
-        //    await _userRepository.DeleteAsync(deleteUser, cancellationToken);
+            _logger.LogInformation("Users, где IsDeleted == false, получены");
 
-        //    _logger.LogInformation($"User is deleted, deleteUser.Id = {deleteUser.Id}");
-        //}
+            return new UserListVm()
+            {
+                UserLookups = _mapper.Map<IList<UserLookupDto>>(users)
+            };
+        }
 
-        //public async Task<UserListVm> GetAllAsync(
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Get All users");
+        public async Task<UserListVm> GetAllByBookingAsync(
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Начало получения Users с бронированиями, где IsDeleted == false");
 
-        //    var users = await _userRepository
-        //        .GetAllAsync(cancellationToken);
+            var users = await _userRepository
+                .GetAllByBookingAsync(cancellationToken);
 
-        //    _logger.LogInformation($"Users: {nameof(users)}");
+            _logger.LogInformation("Users с бронированиями, где IsDeleted == false, получены");
 
-        //    return new UserListVm()
-        //    {
-        //        Users = _mapper.Map<IList<UserLookupDto>>(users)
-        //    };
-        //}
+            return new UserListVm()
+            {
+                UserLookups = _mapper.Map<IList<UserLookupDto>>(users)
+            };
+        }
 
-        //public async Task<UserVm> GetByIdAsync(
-        //    FindAndDeleteUserDto findDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Get user: {nameof(findDto)}");
+        public async Task<UserDetailsVm?> GetByIdAsync(
+            GetUserDto getDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало получения User по Id: {getDto.Id}");
 
-        //    var validationResult = await _findAndDeleteUserDtoValidator
-        //        .ValidateAsync(findDto);
+            var validation = await _getUserDtoValidator
+                .ValidateAsync(getDto, cancellationToken);
 
-        //    if (validationResult.IsValid == false)
-        //        throw new ValidationException(validationResult.Errors);
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //    _logger.LogInformation($"Validation is successful");
+            var user = await _userRepository
+                .GetByIdAsync(getDto.Id, cancellationToken);
 
-        //    var user = await _userRepository
-        //        .GetByIdAsync(findDto.Id, cancellationToken);
+            if (user == null)
+            {
+                _logger.LogWarning($"User не найден по Id: {getDto.Id}");
+                return null;
+            }
 
-        //    if (user == null)
-        //        throw new NotFoundException(nameof(user), findDto.Id);
+            _logger.LogInformation($"User найден по Id: {getDto.Id}");
 
-        //    _logger.LogInformation($"User: {user.Id}");
+            return _mapper.Map<UserDetailsVm>(user);
+        }
 
-        //    return _mapper.Map<UserVm>(user);
-        //}
+        public async Task HardDeleteAsync(
+            HardDeleteUserDto hardDeleteDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало полного удаления User по Id: {hardDeleteDto.Id}");
 
-        //public async Task UpdateAsync(
-        //    UpdateUserDto updateDto,
-        //    CancellationToken cancellationToken)
-        //{
-        //    _logger.LogInformation($"Update user: {nameof(updateDto)}");
+            var validation = await _hardDeleteUserDtoValidator
+                .ValidateAsync(hardDeleteDto, cancellationToken);
 
-        //    var validationResult = await _updateUserDtoValidator
-        //        .ValidateAsync(updateDto);
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //    if (validationResult.IsValid == false)
-        //        throw new ValidationException(validationResult.Errors);
+            var user = await _userRepository
+                .GetByIdAsync(hardDeleteDto.Id, cancellationToken);
 
-        //    _logger.LogInformation($"Validation is successful");
+            if (user == null)
+            {
+                _logger.LogWarning($"User не найден по Id: {hardDeleteDto.Id}");
+                return;
+            }
 
-        //    var existingUser = await _userRepository
-        //        .GetByIdAsync(updateDto.Id, cancellationToken);
+            await _userRepository
+                .HardDeleteAsync(user, cancellationToken);
 
-        //    if (existingUser == null)
-        //        throw new NotFoundException(nameof(existingUser), updateDto.Id);
+            _logger.LogInformation($"User полностью удален по Id: {hardDeleteDto.Id}");
+        }
 
-        //    var updateUser = _mapper.Map(updateDto, existingUser);
+        public async Task SoftDeleteAsync(
+            SoftDeleteUserDto softDeleteDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало мягкого удаления User по Id: {softDeleteDto.Id}");
 
-        //    _logger.LogInformation($"Mapping is successful");
+            var validation = await _softDeleteUserDtoValidator
+                .ValidateAsync(softDeleteDto, cancellationToken);
 
-        //    await _userRepository.UpdateAsync(updateUser, cancellationToken);
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
 
-        //    _logger.LogInformation($"User is updated, updateUser.Id = {updateUser.Id}");
-        //}
+            var user = await _userRepository
+                .GetByIdAsync(softDeleteDto.Id, cancellationToken);
+
+            if (user == null)
+            {
+                _logger.LogWarning($"User не найден по Id: {softDeleteDto.Id}");
+                return;
+            }
+
+            user.DeletedAt = DateTime.UtcNow;
+            user.IsDeleted = true;
+
+            await _userRepository
+                .SoftDeleteAsync(user, cancellationToken);
+
+            _logger.LogInformation($"User мягко удалён по Id: {softDeleteDto.Id}");
+        }
+
+        /// <summary>
+        /// Обновление профиля.
+        /// </summary>
+        /// <param name="updateDto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ValidationException"></exception>
+        public async Task UpdateAsync(
+            UpdateUserDto updateDto,
+            CancellationToken cancellationToken)
+        {
+            _logger.LogInformation($"Начало обновления User по Id: {updateDto.Id}");
+
+            var validation = await _updateUserDtoValidator
+                .ValidateAsync(updateDto, cancellationToken);
+
+            if (validation.IsValid == false)
+                throw new ValidationException(validation.Errors);
+
+            var user = await _userRepository
+                .GetByIdAsync(updateDto.Id, cancellationToken);
+
+            if (user == null)
+            {
+                _logger.LogWarning($"User не найден по Id: {updateDto.Id}");
+                return;
+            }
+
+            user.Name = updateDto.Name;
+            user.Email = updateDto.Email;
+            user.Password = updateDto.Password; 
+
+            user.UpdatedAt = DateTime.UtcNow;
+
+            await _userRepository
+                .UpdateAsync(user, cancellationToken);
+
+            _logger.LogInformation($"User обновлён по Id: {updateDto.Id}");
+        }
     }
 }

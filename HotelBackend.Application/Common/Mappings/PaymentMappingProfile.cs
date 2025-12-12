@@ -7,6 +7,9 @@ using HotelBackend.Shared.Contracts.VMs.PaymentVMs.PaymentLookupDTOs;
 
 namespace HotelBackend.Application.Common.Mappings
 {
+    /// <summary>
+    /// Есть большая оговорка. Mapper работает только на VMs.
+    /// </summary>
     public class PaymentMappingProfile
         : Profile
     {
