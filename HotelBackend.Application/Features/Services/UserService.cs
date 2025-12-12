@@ -78,7 +78,7 @@ namespace HotelBackend.Application.Features.Services
 
             // По умолчанию устанавливаем обычного пользователя (предположим, что Id = 1)
             var defaultUserType = await _userTypeRepository
-                .GetByIdAsync(Guid.Parse("00000000-0000-0000-0000-000000000001"), cancellationToken);
+                .GetByIdAsync(Guid.Parse("b3235352-fe56-43fe-9f6c-7e2fb4af5105"), cancellationToken);
 
             if (defaultUserType == null)
             {

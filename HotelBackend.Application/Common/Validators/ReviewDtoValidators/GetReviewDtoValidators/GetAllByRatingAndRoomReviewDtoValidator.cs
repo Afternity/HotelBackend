@@ -11,7 +11,7 @@ namespace HotelBackend.Application.Common.Validators.ReviewDtoValidators.GetRevi
             RuleFor(paymentDto => paymentDto.Rating)
                 .GreaterThan(0)
                 .WithMessage("Рейтинг не может быть меньше 0.")
-                .LessThan(5)
+                .LessThanOrEqualTo(5)
                 .WithMessage("Рейтинг не может быть больше 5.");
 
             RuleFor(paymentDto => paymentDto.RoomId)

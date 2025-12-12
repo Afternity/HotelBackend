@@ -30,8 +30,7 @@ namespace HotelBackend.Persistence.Repositories
             CancellationToken cancellation)
         {
             return await _context.Rooms
-                .Where(room => 
-                    room.IsDeleted == false)
+                .Where(room => room.IsDeleted == false)
                 .ToListAsync(cancellation);
         }
 
@@ -40,10 +39,9 @@ namespace HotelBackend.Persistence.Repositories
             CancellationToken cancellationToken)
         {
             return await _context.Rooms
-                .Where(room =>
-                    room.Reviews
-                        .Any(review =>
-                            review.Rating == rating))
+                .Where(room => room.Bookings
+                    .Any(booking => booking.Reviews
+                        .Any(review => review.Rating == rating)))
                 .ToListAsync(cancellationToken);
         }
 
