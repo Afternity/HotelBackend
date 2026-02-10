@@ -2,6 +2,9 @@
 
 namespace HotelBackend.Domain.Models
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Booking 
         : BaseModel
     {

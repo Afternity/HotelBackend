@@ -14,14 +14,19 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.9" />
+    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.5.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.5.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.4" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HotelBackend.Application\HotelBackend.Application.csproj" />
+    <ProjectReference Include="..\HotelBackend.Identity\HotelBackend.Identity.csproj" />
     <ProjectReference Include="..\HotelBackend.Persistence\HotelBackend.Persistence.csproj" />
+    <ProjectReference Include="..\HotelBackend.Shared\HotelBackend.Shared.csproj" />
   </ItemGroup>
 
 </Project>

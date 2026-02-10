@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36414.22
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 EndProject
@@ -20,6 +20,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{754FC069-D67B-A9D7-50A1-8D1CA196D8F1}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		CLAUDE.md = CLAUDE.md
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
@@ -30,6 +31,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tets", "Tets", "{9E145F92-DDC5-4A2E-8098-DC384E094D40}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBackend.Tests", "HotelBackend.Tests\HotelBackend.Tests.csproj", "{28275829-8684-47B1-ABB8-2D33F7D33DC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBackend.Identity", "HotelBackend.Identity\HotelBackend.Identity.csproj", "{7DC673C0-C930-4FEE-88E2-6DAD4C8BAA45}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +64,10 @@ Global
 		{28275829-8684-47B1-ABB8-2D33F7D33DC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28275829-8684-47B1-ABB8-2D33F7D33DC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28275829-8684-47B1-ABB8-2D33F7D33DC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DC673C0-C930-4FEE-88E2-6DAD4C8BAA45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DC673C0-C930-4FEE-88E2-6DAD4C8BAA45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DC673C0-C930-4FEE-88E2-6DAD4C8BAA45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DC673C0-C930-4FEE-88E2-6DAD4C8BAA45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +79,7 @@ Global
 		{DC6C3857-97A6-4625-A047-E2845AD7CA33} = {A0B51B4E-6613-4891-B8AA-484C4320A7B8}
 		{BC2B2BB6-F75F-4866-91E5-E215302FD31C} = {BFE9D2A8-1D48-4A25-A7BB-BB26938C7260}
 		{28275829-8684-47B1-ABB8-2D33F7D33DC3} = {9E145F92-DDC5-4A2E-8098-DC384E094D40}
+		{7DC673C0-C930-4FEE-88E2-6DAD4C8BAA45} = {C9080AB7-9482-47E6-B709-7879BCCE8C7D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9D9DF983-EE15-4E13-BF60-3830C049BBD1}

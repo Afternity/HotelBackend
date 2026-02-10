@@ -482,3 +482,15 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Claude Code 
+.claude/
+CLAUDE.md
+base_task.md
+hello_world.md
+
+# Sensitive app settings 
+appsettings.Development.json
+
+# Null folders
+nul 

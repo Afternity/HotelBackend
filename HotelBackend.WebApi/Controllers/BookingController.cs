@@ -1,5 +1,4 @@
 ﻿using HotelBackend.Domain.Interfaces.InterfacesServices;
-using HotelBackend.Domain.Models;
 using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.CreateBookingDTOs;
 using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.DeleteBookingDTOs;
 using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.GetBookingDTOs;

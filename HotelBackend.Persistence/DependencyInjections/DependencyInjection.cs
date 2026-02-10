@@ -10,7 +10,7 @@ namespace HotelBackend.Persistence.DependencyInjections
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddDatabaseService(
+        public static IServiceCollection AddPersistence(
             this IServiceCollection services,
             IConfiguration config)
         {
