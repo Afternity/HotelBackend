@@ -12,7 +12,8 @@ namespace HotelBackend.Persistence.DependencyInjections
     {
         public static IServiceCollection AddPersistence(
             this IServiceCollection services,
-            IConfiguration config)
+            IConfiguration config,
+            bool isDevelopment)
         {
             var connectionString = config.GetConnectionString("DefaultConnection");
 
@@ -33,8 +34,11 @@ namespace HotelBackend.Persistence.DependencyInjections
                     npgsqlOptions.CommandTimeout(30);
                 });
 
-                options.EnableDetailedErrors();
-                options.EnableSensitiveDataLogging();
+                if (isDevelopment)
+                {
+                    options.EnableDetailedErrors();
+                    options.EnableSensitiveDataLogging();
+                }
 
                 options.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
 
