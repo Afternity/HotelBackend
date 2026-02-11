@@ -1,10 +1,12 @@
 ﻿using HotelBackend.Domain.Interfaces.InterfacesServices;
+using HotelBackend.Identity.Common.Models;
 using HotelBackend.Shared.Contracts.DTOs.ReviewDTOs.CreateReviewDTOs;
 using HotelBackend.Shared.Contracts.DTOs.ReviewDTOs.DeleteReviewDTOs;
 using HotelBackend.Shared.Contracts.DTOs.ReviewDTOs.GetReviewDTOs;
 using HotelBackend.Shared.Contracts.DTOs.ReviewDTOs.UpdateReviewDTOs;
 using HotelBackend.Shared.Contracts.VMs.ReviewVMs.ReviewDetailsVMs;
 using HotelBackend.Shared.Contracts.VMs.ReviewVMs.ReviewListVMs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelBackend.WebApi.Controllers
@@ -23,6 +25,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-by-id")]
+        [AllowAnonymous]
         public async Task<ActionResult<ReviewDetailsVm>> Get(
             [FromQuery] GetReviewDto getDto,
             CancellationToken cancellationToken)
@@ -34,6 +37,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Policy = PolicyConsts.ClientOnly)]
         public async Task<IActionResult> Create(
             [FromBody] CreateReviewDto createDto,
             CancellationToken cancellationToken)
@@ -48,6 +52,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPut("update")]
+        [Authorize(Policy = PolicyConsts.ClientOnly)]
         public async Task<IActionResult> Update(
             [FromBody] UpdateReviewDto updateDto,
             CancellationToken cancellationToken)
@@ -59,6 +64,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpDelete("hard-delete")]
+        [Authorize(Policy = PolicyConsts.AdminOnly)]
         public async Task<IActionResult> Delete(
             [FromQuery] HardDeleteReviewDto hardDeleteDto,
             CancellationToken cancellationToken)
@@ -70,6 +76,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPatch("soft-delete")]
+        [Authorize(Policy = PolicyConsts.AdminOnly)]
         public async Task<IActionResult> SoftDelete(
             [FromBody] SoftDeleteReviewDto softDeleteDto,
             CancellationToken cancellationToken)
@@ -81,6 +88,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-all")]
+        [AllowAnonymous]
         public async Task<ActionResult<ReviewListVm>> GetAll(
             CancellationToken cancellationToken)
         {
@@ -91,6 +99,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-by-rating-and-room")]
+        [AllowAnonymous]
         public async Task<ActionResult<RatingAndRoomReviewListVm>> GetByRatingAndRoom(
             [FromQuery] GetAllByRatingAndRoomReviewDto getAllDto,
             CancellationToken cancellationToken)

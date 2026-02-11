@@ -206,7 +206,7 @@ namespace HotelBackend.Identity.Services
                         throw new ValidationException($"Ошибка создания пользователя: {string.Join(", ", createResult.Errors)}");
                     }
 
-                    await _userManager.AddToRoleAsync(newUser, RoleConsts.Member);
+                    await _userManager.AddToRoleAsync(newUser, RoleConsts.Client);
 
                     var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(newUser);
                     var encodedToken = HttpUtility.UrlEncode(confirmationToken);

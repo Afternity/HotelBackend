@@ -1,10 +1,12 @@
 ﻿using HotelBackend.Domain.Interfaces.InterfacesServices;
+using HotelBackend.Identity.Common.Models;
 using HotelBackend.Shared.Contracts.DTOs.PaymentDTOs.CreatePaymentDTOs;
 using HotelBackend.Shared.Contracts.DTOs.PaymentDTOs.DeletePaymentDTOs;
 using HotelBackend.Shared.Contracts.DTOs.PaymentDTOs.GetPaymentDTOs;
 using HotelBackend.Shared.Contracts.DTOs.PaymentDTOs.UpdatePaymentDTOs;
 using HotelBackend.Shared.Contracts.VMs.PaymentVMs.PaymentDetailsVMs;
 using HotelBackend.Shared.Contracts.VMs.PaymentVMs.PaymentListVMs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelBackend.WebApi.Controllers
@@ -23,6 +25,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-by-id")]
+        [Authorize(Policy = PolicyConsts.All)]
         public async Task<ActionResult<PaymentDetailsVm>> Get(
             [FromQuery] GetPaymentDto getDto,
             CancellationToken cancellationToken)
@@ -34,6 +37,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Policy = PolicyConsts.All)]
         public async Task<IActionResult> Create(
             [FromBody] CreatePaymentDto createDto,
             CancellationToken cancellationToken)
@@ -48,6 +52,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPut("update")]
+        [Authorize(Policy = PolicyConsts.StaffOnly)]
         public async Task<IActionResult> Update(
             [FromBody] UpdatePaymentDto updateDto,
             CancellationToken cancellationToken)
@@ -59,6 +64,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpDelete("hard-delete")]
+        [Authorize(Policy = PolicyConsts.AdminOnly)]
         public async Task<IActionResult> Delete(
             [FromQuery] HardDeletePaymentDto hardDeleteDto,
             CancellationToken cancellationToken)
@@ -70,6 +76,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPatch("soft-delete")]
+        [Authorize(Policy = PolicyConsts.StaffOnly)]
         public async Task<IActionResult> SoftDelete(
             [FromBody] SoftDeletePaymentDto softDeleteDto,
             CancellationToken cancellationToken)
@@ -81,6 +88,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-all")]
+        [Authorize(Policy = PolicyConsts.StaffOnly)]
         public async Task<ActionResult<PaymentListVm>> GetAll(
             CancellationToken cancellationToken)
         {
@@ -91,6 +99,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-user-payments")]
+        [Authorize(Policy = PolicyConsts.All)]
         public async Task<ActionResult<UserPaymentListVm>> GetAllByUser(
             [FromQuery] GetAllByUserPaymentDto getAllDto,
             CancellationToken cancellationToken)

@@ -3,7 +3,7 @@
     public static class RoleConsts
     {
         public const string Admin = "Admin";
-        public const string Member = "Member";
-        public const string Guest = "Guest";
+        public const string Manager = "Manager";
+        public const string Client = "Client";
     }
 }

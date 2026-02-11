@@ -54,10 +54,25 @@ namespace HotelBackend.Identity.DependecyInjections
         private static void AddAuthorization(
             IServiceCollection services)
         {
-            services.AddAuthorization(options => options.DefaultPolicy =
-                new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-                .RequireAuthenticatedUser()
-                        .Build());
+            services.AddAuthorization(options =>
+            {
+                options.DefaultPolicy =
+                    new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                        .RequireAuthenticatedUser()
+                        .Build();
+
+                options.AddPolicy(PolicyConsts.All, policy =>
+                    policy.RequireRole(RoleConsts.Admin, RoleConsts.Manager, RoleConsts.Client));
+
+                options.AddPolicy(PolicyConsts.StaffOnly, policy =>
+                    policy.RequireRole(RoleConsts.Admin, RoleConsts.Manager));
+
+                options.AddPolicy(PolicyConsts.AdminOnly, policy =>
+                    policy.RequireRole(RoleConsts.Admin));
+
+                options.AddPolicy(PolicyConsts.ClientOnly, policy =>
+                    policy.RequireRole(RoleConsts.Client));
+            });
         }
 
         private static void AddDbContext(
@@ -126,12 +141,12 @@ namespace HotelBackend.Identity.DependecyInjections
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings.Issuer 
+                    ValidIssuer = jwtSettings.Issuer
                         ?? throw new ArgumentNullException(jwtSettings.Issuer),
-                    ValidAudience = jwtSettings.Audience 
+                    ValidAudience = jwtSettings.Audience
                         ?? throw new ArgumentNullException(jwtSettings.Audience),
                     IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(jwtSettings.Secret 
+                        Encoding.UTF8.GetBytes(jwtSettings.Secret
                             ?? throw new ArgumentNullException(jwtSettings.Secret))),
                 };
             });

@@ -24,6 +24,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult<AuthorizationVm>> Authenticate(
             [FromBody] AuthorizationDto authorizationDto,
             CancellationToken cancellationToken)
@@ -35,6 +36,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPost("register")]
+        [AllowAnonymous]
         public async Task<ActionResult<RegistrationVm>> Registration(
             [FromBody] RegistrationDto registrationDto,
             CancellationToken cancellationToken)
@@ -46,6 +48,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPost("refresh-token")]
+        [Authorize(Policy = PolicyConsts.All)]
         public async Task<ActionResult<TokenModel>> RefreshToken(
             JwtTokensContainer tokenModel,
             CancellationToken cancellationToken)
@@ -56,8 +59,8 @@ namespace HotelBackend.WebApi.Controllers
             return Ok(result);
         }
 
-        [Authorize]
         [HttpPost("revoke/{email}")]
+        [Authorize(Policy = PolicyConsts.AdminOnly)]
         public async Task<IActionResult> Revoke(
             string email,
             CancellationToken cancellationToken)
@@ -68,8 +71,8 @@ namespace HotelBackend.WebApi.Controllers
             return Ok();
         }
 
-        [Authorize]
         [HttpPost("revoke-all")]
+        [Authorize(Policy = PolicyConsts.AdminOnly)]
         public async Task<IActionResult> RevokeAll(
             CancellationToken cancellationToken)
         {
@@ -79,6 +82,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPost("resend-confirmation-email")]
+        [AllowAnonymous]
         public async Task<ActionResult<bool>> ResendConfirmationEmailAsync(
             string email,
             CancellationToken cancellationToken)
@@ -90,6 +94,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("confirm-email")]
+        [AllowAnonymous]
         public async Task<ActionResult<bool>> ConfirmEmailAsync(
            [FromQuery] string userId,
            [FromQuery] string token,
