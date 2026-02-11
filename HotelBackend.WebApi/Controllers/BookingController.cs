@@ -1,10 +1,12 @@
 ﻿using HotelBackend.Domain.Interfaces.InterfacesServices;
+using HotelBackend.Identity.Common.Models;
 using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.CreateBookingDTOs;
 using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.DeleteBookingDTOs;
 using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.GetBookingDTOs;
 using HotelBackend.Shared.Contracts.DTOs.BookingDTOs.UpdateBookingDTOs;
 using HotelBackend.Shared.Contracts.VMs.BookingVMs.BookingDetailsVMs;
 using HotelBackend.Shared.Contracts.VMs.BookingVMs.BookingListVMs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelBackend.WebApi.Controllers
@@ -22,6 +24,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-by-id")]
+        [AllowAnonymous]
         public async Task<ActionResult<BookingDetailsVm>> Get(
             [FromQuery] GetBookingDto getDto,
             CancellationToken cancellationToken)
@@ -33,6 +36,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize(Roles = RoleConsts.Client,)]
         public async Task<IActionResult> Create(
             [FromBody] CreateBookingDto createDto,
             CancellationToken cancellationToken)
