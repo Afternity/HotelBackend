@@ -29,7 +29,7 @@ namespace HotelBackend.Domain.Interfaces.InterfacesRepositories
         /// Для пользователя
         /// </summary>
         Task<IList<Payment>> GetAllByUserAsync(
-            User user,
+            Guid userId,
             CancellationToken cancellationToken);
 
         /// <summary>

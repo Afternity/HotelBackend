@@ -44,7 +44,7 @@ namespace HotelBackend.Identity.DependecyInjections
         private static void AddIdentityCore(
             IServiceCollection services)
         {
-            services.AddIdentity<ApplicationUser, IdentityRole<long>>()
+            services.AddIdentity<ApplicationUser, IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<HotelBackendIdentityDbContext>()
                 .AddDefaultTokenProviders()
                 .AddUserManager<UserManager<ApplicationUser>>()

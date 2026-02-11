@@ -19,7 +19,6 @@ namespace HotelBackend.Application.Features.Services
     {
         // БД contracts
         private readonly IReviewRepository _reviewRepository;
-        private readonly IUserRepository _userRepository;
         private readonly IRoomRepository _roomRepository;
         private readonly IBookingRepository _bookingRepository;
         // infrastructure
@@ -36,7 +35,6 @@ namespace HotelBackend.Application.Features.Services
 
         public ReviewService(
             IReviewRepository reviewRepository,
-            IUserRepository userRepository,
             IRoomRepository roomRepository,
             IBookingRepository bookingRepository,
             IMapper mapper,
@@ -50,7 +48,6 @@ namespace HotelBackend.Application.Features.Services
         {
             // БД contracts
             _reviewRepository = reviewRepository;
-            _userRepository = userRepository;
             _roomRepository = roomRepository;
             _bookingRepository = bookingRepository;
             // infrastructure

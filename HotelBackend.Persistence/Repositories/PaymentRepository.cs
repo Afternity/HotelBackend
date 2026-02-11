@@ -36,12 +36,12 @@ namespace HotelBackend.Persistence.Repositories
         }
 
         public async Task<IList<Payment>> GetAllByUserAsync(
-            User user,
+            Guid userId,
             CancellationToken cancellationToken)
         {
             return await _context.Payments
                 .Where(payment => 
-                    payment.Booking.UserId == user.Id &&
+                    payment.Booking.UserId == userId &&
                     payment.IsDeleted == false)
                 .ToListAsync(cancellationToken);
         }

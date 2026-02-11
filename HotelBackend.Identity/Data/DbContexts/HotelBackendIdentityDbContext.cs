@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace HotelBackend.Identity.Data.DbContexts
 {
     public class HotelBackendIdentityDbContext 
-        : IdentityDbContext<ApplicationUser, IdentityRole<long>, long>
+        : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         private readonly DbContextOptions<HotelBackendIdentityDbContext> _options;
 

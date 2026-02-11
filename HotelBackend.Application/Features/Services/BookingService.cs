@@ -19,7 +19,6 @@ namespace HotelBackend.Application.Features.Services
     {
         // БД contracts
         private readonly IBookingRepository _bookingRepository;
-        private readonly IUserRepository _userRepository;
         private readonly IRoomRepository _roomRepository;
         // infrastructure
         private readonly IMapper _mapper;
@@ -36,7 +35,6 @@ namespace HotelBackend.Application.Features.Services
 
         public BookingService(
             IBookingRepository bookingRepository,
-            IUserRepository userRepository,
             IRoomRepository roomRepository,
             IMapper mapper,
             ILogger<BookingService> logger,
@@ -50,7 +48,6 @@ namespace HotelBackend.Application.Features.Services
         {
             // БД contracts
             _bookingRepository = bookingRepository;
-            _userRepository = userRepository;
             _roomRepository = roomRepository;
             // infrastructure
             _mapper = mapper;
@@ -77,15 +74,6 @@ namespace HotelBackend.Application.Features.Services
 
             if (validation.IsValid == false)
                 throw new ValidationException(validation.Errors);
-
-            var user = await _userRepository
-                .GetByIdAsync(createDto.UserId, cancellationToken);
-
-            if (user == null)
-            {
-                _logger.LogWarning($"User не найден по Id: {createDto.UserId}");
-                return Guid.Empty;
-            }
 
             var room = await _roomRepository
                 .GetByIdAsync(createDto.RoomId, cancellationToken);
@@ -146,17 +134,8 @@ namespace HotelBackend.Application.Features.Services
             if (validation.IsValid == false)
                 throw new ValidationException(validation.Errors);
 
-            var user = await _userRepository
-                .GetByIdAsync(getDto.UserId, cancellationToken);
-
-            if (user == null)
-            {
-                _logger.LogWarning($"User не найден по Id: {getDto.UserId}");
-                return new UserBookingListVm();
-            }
-
             var bookings = await _bookingRepository
-                .GetAllByUserAsync(user, cancellationToken);
+                .GetAllByUserAsync(getDto.UserId, cancellationToken);
 
             _logger.LogInformation("Bookings определенного User, где IsDeleted == false, получены");
 
@@ -204,17 +183,8 @@ namespace HotelBackend.Application.Features.Services
             if (validation.IsValid == false)
                 throw new ValidationException(validation.Errors);
 
-            var user = await _userRepository
-                .GetByIdAsync(getDto.UserId, cancellationToken);
-
-            if (user == null)
-            {
-                _logger.LogWarning($"User не найден по Id: {getDto.UserId}");
-                return null;
-            }
-
             var lastBooking = await _bookingRepository
-                .GetLastBookingByUserAsync(user, cancellationToken);
+                .GetLastBookingByUserAsync(getDto.UserId, cancellationToken);
 
             if (lastBooking == null)
             {
@@ -302,15 +272,6 @@ namespace HotelBackend.Application.Features.Services
             if (updateBooking == null)
             {
                 _logger.LogWarning($"Booking не найдет по Id: {updateDto.Id}");
-                return;
-            }
-
-            var user = await _userRepository
-                .GetByIdAsync(updateDto.UserId, cancellationToken);
-
-            if (user == null)
-            {
-                _logger.LogWarning($"User не найден по Id: {updateDto.UserId}");
                 return;
             }
 
