@@ -1,15 +1,9 @@
+using FluentValidation;
 using HotelBackend.Application.DependencyInjections;
 using HotelBackend.Persistence.DependencyInjections;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using HotelBackend.Identity.Data.DbContexts;
 using Microsoft.OpenApi.Models;
 using HotelBackend.Identity.DependecyInjections;
-using HotelBackend.Identity.Common.Settings;
-using HotelBackend.Identity.Common.Models;
+using Microsoft.AspNetCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +25,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddApplication();
-builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddPersistence(builder.Configuration, builder.Environment.IsDevelopment());
 builder.Services.AddIdentity(builder.Configuration);
 
 builder.Services.AddSwaggerGen(options =>
@@ -83,12 +77,27 @@ else
     app.UseExceptionHandler("/error");
 }
 
-app.Map("/error", (HttpContext context) =>
+app.Map("/error", (HttpContext context, ILogger<Program> logger, IWebHostEnvironment env) =>
 {
-    var exception = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+    var exception = context.Features
+        .Get<IExceptionHandlerFeature>()?.Error;
+
+    if (exception is ValidationException validationException)
+    {
+        return Results.ValidationProblem(
+            validationException.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(
+                    g => g.Key,
+                    g => g.Select(e => e.ErrorMessage).ToArray()),
+            statusCode: 400);
+    }
+
+    logger.LogError(exception, "Необработанное исключение");
+
     return Results.Problem(
-        title: "��������� ������",
-        detail: exception?.Error?.Message,
+        title: "Внутренняя ошибка сервера",
+        detail: env.IsDevelopment() ? exception?.Message : null,
         statusCode: 500);
 });
 
