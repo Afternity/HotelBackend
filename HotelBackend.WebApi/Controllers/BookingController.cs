@@ -24,7 +24,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-by-id")]
-        [AllowAnonymous]
+        [Authorize(Policy = PolicyConsts.All)]
         public async Task<ActionResult<BookingDetailsVm>> Get(
             [FromQuery] GetBookingDto getDto,
             CancellationToken cancellationToken)
@@ -36,7 +36,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPost("create")]
-        [Authorize(Roles = RoleConsts.Client,)]
+        [Authorize(Policy = PolicyConsts.All)]
         public async Task<IActionResult> Create(
             [FromBody] CreateBookingDto createDto,
             CancellationToken cancellationToken)
@@ -51,6 +51,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPut("update")]
+        [Authorize(Policy = PolicyConsts.StaffOnly)]
         public async Task<IActionResult> Update(
             [FromBody] UpdateBookingDto updateDto,
             CancellationToken cancellationToken)
@@ -62,6 +63,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpDelete("hard-delete")]
+        [Authorize(Policy = PolicyConsts.AdminOnly)]
         public async Task<IActionResult> Delete(
             [FromQuery] HardDeleteBookingDto hardDeleteDto,
             CancellationToken cancellationToken)
@@ -73,6 +75,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpPatch("soft-delete")]
+        [Authorize(Policy = PolicyConsts.StaffOnly)]
         public async Task<IActionResult> SoftDelete(
             [FromBody] SoftDeleteBookingDto softDeleteDto,
             CancellationToken cancellationToken)
@@ -84,6 +87,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-all")]
+        [AllowAnonymous]
         public async Task<ActionResult<BookingListVm>> GetAll(
             CancellationToken cancellationToken)
         {
@@ -94,6 +98,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-user-bookings")]
+        [Authorize(Policy = PolicyConsts.All)]
         public async Task<ActionResult<UserBookingListVm>> GetAllByUser(
             [FromQuery] GetUserBookingsDto getDto,
             CancellationToken cancellationToken)
@@ -105,6 +110,7 @@ namespace HotelBackend.WebApi.Controllers
         }
 
         [HttpGet("get-last-user-booking")]
+        [Authorize(Policy = PolicyConsts.All)]
         public async Task<ActionResult<BookingDetailsVm>> GetLastByUser(
             [FromQuery] GetLastUserBookingDto getDto,
             CancellationToken cancellationToken)

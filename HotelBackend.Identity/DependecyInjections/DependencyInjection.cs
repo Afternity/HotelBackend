@@ -60,12 +60,18 @@ namespace HotelBackend.Identity.DependecyInjections
                     new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
                         .RequireAuthenticatedUser()
                         .Build();
+
                 options.AddPolicy(PolicyConsts.All, policy =>
                     policy.RequireRole(RoleConsts.Admin, RoleConsts.Manager, RoleConsts.Client));
+
                 options.AddPolicy(PolicyConsts.StaffOnly, policy =>
                     policy.RequireRole(RoleConsts.Admin, RoleConsts.Manager));
+
                 options.AddPolicy(PolicyConsts.AdminOnly, policy =>
                     policy.RequireRole(RoleConsts.Admin));
+
+                options.AddPolicy(PolicyConsts.ClientOnly, policy =>
+                    policy.RequireRole(RoleConsts.Client));
             });
         }
 
