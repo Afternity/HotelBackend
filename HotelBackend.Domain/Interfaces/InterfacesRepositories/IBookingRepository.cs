@@ -49,14 +49,14 @@ namespace HotelBackend.Domain.Interfaces.InterfacesRepositories
         /// Для пользователя
         /// </summary>
         Task<IList<Booking>> GetAllByUserAsync(
-            User user,
+            Guid userId,
             CancellationToken cancellationToken);
 
         /// <summary>
         /// Для пользователя
         /// </summary>
         Task<Booking?> GetLastBookingByUserAsync(
-            User user,
+            Guid userId,
             CancellationToken cancellationToken);
     }
 }

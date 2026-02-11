@@ -47,12 +47,6 @@ namespace HotelBackend.Persistence.Data.EntityConfigurations
                 .HasForeignKey(booking => booking.RoomId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(booking => booking.User)
-                .WithMany(user => user.Bookings)
-                .IsRequired(true)
-                .HasForeignKey(booking => booking.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
             builder.HasMany(booking => booking.Reviews)
                 .WithOne(review => review.Booking)
                 .IsRequired(true)

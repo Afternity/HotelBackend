@@ -35,12 +35,12 @@ namespace HotelBackend.Persistence.Repositories
         }
 
         public async Task<IList<Booking>> GetAllByUserAsync(
-            User user,
+            Guid userId,
             CancellationToken cancellationToken)
         {
             return await _context.Bookings
                 .Where(booking =>
-                    booking.UserId == user.Id &&
+                    booking.UserId == userId &&
                     booking.IsDeleted == false)
                 .ToListAsync(cancellationToken);
         }
@@ -56,12 +56,12 @@ namespace HotelBackend.Persistence.Repositories
         }
 
         public async Task<Booking?> GetLastBookingByUserAsync(
-            User user,
+            Guid userId,
             CancellationToken cancellationToken)
         {
             return await _context.Bookings
                 .Where(booking => 
-                    booking.UserId == user.Id &&
+                    booking.UserId == userId &&
                     booking.IsDeleted == false)
                 .OrderByDescending(booking => booking.CreatedAt)
                 .FirstOrDefaultAsync(cancellationToken);

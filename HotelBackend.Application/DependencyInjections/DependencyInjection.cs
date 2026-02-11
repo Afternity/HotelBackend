@@ -17,8 +17,6 @@ namespace HotelBackend.Application.DependencyInjections
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IRoomService, RoomService>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IUserTypeService, UserTypeService>();
 
             return services;
         }
